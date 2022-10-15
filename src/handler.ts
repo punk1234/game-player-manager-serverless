@@ -1,10 +1,10 @@
-const AWS = require("aws-sdk");
-const express = require("express");
-const serverless = require("serverless-http");
+import AWS from "aws-sdk";
+import express from "express";
+import serverless from "serverless-http";
 
 const app = express();
 
-const USERS_TABLE = process.env.USERS_TABLE;
+const USERS_TABLE = process.env.USERS_TABLE as string;
 const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
 
 app.use(express.json());
@@ -64,5 +64,4 @@ app.use((req, res, next) => {
   });
 });
 
-
-module.exports.handler = serverless(app);
+export const handler = serverless(app);

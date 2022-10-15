@@ -25,9 +25,16 @@ provider:
 
 functions:
   api:
-    handler: handler.handler
+    handler: src/handler.handler
     events:
       - httpApi: '*'
+
+# ENABLE TYPESCRIPT
+
+plugins:
+  - serverless-plugin-typescript
+
+# CLOUD FORMATION CONFIGURATION
 
 resources:
   Resources:
@@ -40,7 +47,7 @@ resources:
         KeySchema:
           - AttributeName: userId
             KeyType: HASH
-        BillingMode: PAY_PER_REQUEST
+        # BillingMode: PAY_PER_REQUEST
         TableName: ${self:custom.tableName}
         ProvisionedThroughput: # ADDED LINE FOR BILLING OPTIMIZATION
           ReadCapacityUnits: 1
