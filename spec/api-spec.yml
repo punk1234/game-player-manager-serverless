@@ -1,0 +1,778 @@
+openapi: 3.0.0
+info:
+  title: "Game-Player Manager Service"
+  description: "This service provides endpoints for all game-player manager related interactions"
+  version: 1.0.0
+  contact:
+    name: "AKEJU FATAI"
+    email: "fatai@mail.com"
+
+x-organization: serverless
+x-service-id: game-player-managers
+
+# servers:
+#   - description: Staging Ingress
+#     url: https://game-player-managers.serverless
+
+tags:
+  - name: auth
+    description: "Authentication related endpoints"
+  - name: users
+    description: "Users related endpoints"
+  - name: games
+    description: "Games related endpoints"
+  - name: game-play-scores
+    description: "Game-play scores related endpoints"
+
+security:
+  - bearerToken: [ ]
+
+paths:
+  /auth/register:
+    post:
+      summary: "User Registration"
+      description: "User Registration"
+      operationId: registerUser
+      x-visibility: public
+      security: [ ]
+      tags:
+        - "auth"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterUserDto"
+      responses:
+        "201":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatusDto"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "default":
+          $ref: "#/components/responses/ServerError"
+
+  /auth/login:
+    post:
+      summary: "User Login"
+      description: "User Login"
+      operationId: login
+      x-visibility: public
+      security: [ ]
+      tags:
+        - "auth"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginDto"
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "default":
+          $ref: "#/components/responses/ServerError"
+
+  /auth/logout:
+    post:
+      summary: "Log user out"
+      description: "Log user out"
+      operationId: logout
+      x-visibility: public
+      tags:
+        - "auth"
+      responses:
+        "200":
+          $ref: "#/components/responses/StatusResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "default":
+          $ref: "#/components/responses/ServerError"
+
+  /games:
+    post:
+      summary: "Create game"
+      description: "Create game"
+      operationId: createGame
+      x-visibility: "public"
+      tags:
+        - "games"
+      security: [ ]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateGameDto"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Game"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/AccessDenied"
+        "default":
+          $ref: "#/components/responses/ServerError"
+
+  /games/{gameId}:
+    parameters:
+      - $ref: "#/components/parameters/gameIdParam"
+    patch:
+      summary: "Update game"
+      description: "update game"
+      operationId: updateGame
+      x-visibility: "public"
+      tags:
+        - "games"
+      security: [ ]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateGameDto"
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Game"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/AccessDenied"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "default":
+          $ref: "#/components/responses/ServerError"
+
+    get:
+      summary: "Get game"
+      description: "Get game"
+      operationId: getGame
+      x-visibility: "public"
+      tags:
+        - "games"
+      security: [ ]
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Game"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/AccessDenied"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "default":
+          $ref: "#/components/responses/ServerError"
+
+  /me:
+    get:
+      summary: "Get my profile"
+      operationId: getMyProfile
+      description: "Get profile of active user (extracting identity from token)"
+      x-visibility: "public"
+      tags:
+        - "account"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "default":
+          $ref: "#/components/responses/ServerError"
+
+    patch:
+      summary: "Update my user"
+      operationId: updateUser
+      description: "Update profile of active user (extracting identity from token)"
+      x-visibility: "public"
+      tags:
+        - "account"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserDto"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "default":
+          $ref: "#/components/responses/ServerError"
+
+  /me/username:
+    put:
+      summary: "Change username"
+      operationId: changeUsername
+      description: "Change current user username"
+      x-visibility: "public"
+      tags:
+        - "account"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangeUsernameDto"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "default":
+          $ref: "#/components/responses/ServerError"
+
+  /me/game-play/submit-score:
+    post:
+      summary: "Submit game-play score"
+      description: "Submit game-play score"
+      operationId: submitGameplayScore
+      x-visibility: "public"
+      tags:
+        - "game-play-scores"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubmitGameplayScoreDto"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserGameHighScore"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "422":
+          $ref: "#/components/responses/UnprocessableError"
+        "default":
+          $ref: "#/components/responses/ServerError"
+
+  /me/game-plays/high-scores:
+    post:
+      summary: "Get game-plays high-scores"
+      description: "Get game-plays high-scores"
+      operationId: getGameplaysHighScores
+      x-visibility: "public"
+      tags:
+        - "game-play-scores"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserGameHighScore" # NEEDS TO BE A LIST
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "default":
+          $ref: "#/components/responses/ServerError"
+          
+  # /me/change-password
+
+components:
+  schemas:
+    # REQUEST OBJECT DEFINITIONS
+
+    RegisterUserDto:
+      type: "object"
+      additionalProperties: false
+      required:
+        - "username"
+        - "password"
+      properties:
+        username:
+          type: "string"
+          minLength: 3
+          description: "User's username in platform"
+        password:
+          type: string
+          minLength: 6
+        beAdmin:
+          type: boolean
+          default: false
+        gender:
+          $ref: "#/components/schemas/Gender"
+        bio:
+          type: "string"
+          description: "User biography (information about user)"
+
+    LoginDto:
+      type: "object"
+      additionalProperties: false
+      required:
+        - "username"
+        - "password"
+      properties:
+        username:
+          type: "string"
+          minLength: 3
+          description: "User's username in platform"
+        password:
+          type: string
+          minLength: 6
+
+    UpdateUserDto:
+      type: "object"
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        gender:
+          $ref: "#/components/schemas/Gender"
+        bio:
+          type: "string"
+          description: "User biography (information about user)"
+
+    CreateGameDto:
+      type: "object"
+      additionalProperties: false
+      required:
+        - "name"
+        - "maxGamePlayScore"
+        - "dailyMaxScoreSubmission"
+      properties:
+        name:
+          type: "string"
+          minLength: 1
+          description: "Game name"
+        description:
+          type: string
+          minLength: 6
+        maxGamePlayScore:
+          type: "integer"
+          minimum: 1000
+          description: "Maximum game-play score for a game"
+        dailyMaxScoreSubmissionCount:
+          type: "integer"
+          minimum: 3
+          description: "Maximum game-play score submission count for a game (players are not allowed to submit more than the given value)"
+
+    UpdateGameDto:
+      type: "object"
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        name:
+          type: "string"
+          minLength: 1
+          description: "Game name"
+        description:
+          type: string
+          minLength: 6
+        maxGamePlayScore:
+          type: "integer"
+          minimum: 1000
+          description: "Maximum game-play score for a game"
+        dailyMaxScoreSubmissionCount:
+          type: "integer"
+          minimum: 3
+          description: "Maximum game-play score submission count for a game (players are not allowed to submit more than the given value)"
+
+    ChangeUsernameDto:
+      type: "object"
+      additionalProperties: false
+      required:
+        - "username"
+      properties:
+        username:
+          type: "string"
+          minLength: 3
+          description: "New username"
+
+    SubmitGameplayScoreDto:
+      type: "object"
+      additionalProperties: false
+      required:
+        - "score"
+      properties:
+        score:
+          type: "integer"
+          minimum: 0
+          description: "User score for game-play"
+
+
+    # RESPONSE OBJECT DEFINITIONS
+
+    LoginResponse:
+      type: "object"
+      required:
+        - "user"
+        - "token"
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        token:
+          type: "string"
+          minLength: 10
+          description: "User authentication token (JWT)"
+
+    User:
+      type: "object"
+      required:
+        - "id"
+        - "username"
+        - "isAdmin"
+      properties:
+        id:
+          type: "string"
+          format: "uuid"
+          description: "User unique identifier"
+        username:
+          type: "string"
+          minLength: 3
+          description: "User's username in platform"
+        isAdmin:
+          type: "boolean"
+          default: false
+        gender:
+          $ref: "#/components/schemas/Gender"
+        bio:
+          type: "string"
+          description: "User biography (information about user)"
+
+    Game:
+      type: "object"
+      additionalProperties: false
+      required:
+        - "id"
+        - "name"
+        - "maxGamePlayScore"
+        - "dailyMaxScoreSubmission"
+      properties:
+        id:
+          type: "string"
+          format: "uuid"
+        name:
+          type: "string"
+          minLength: 1
+          description: "Game name"
+        description:
+          type: string
+          minLength: 6
+        maxGamePlayScore:
+          type: "integer"
+          minimum: 1000
+          description: "Maximum game-play score for a game"
+        dailyMaxScoreSubmissionCount:
+          type: "integer"
+          minimum: 1000
+          description: "Maximum game-play score submission count for a game (players are not allowed to submit more than the given value)"
+        createdAt:
+          type: "string"
+          format: "date"
+          description: "Date & time game record was created"
+
+    UserGameHighScore:
+      type: "object"
+      additionalProperties: false
+      required:
+        - "id"
+        - "userId"
+        - "gameId"
+        - "highScore"
+        - "lastSubmittedScore"
+        - "lastSubmittedAt"
+        - "submissionCount"
+      properties:
+        id:
+          type: "string"
+          format: "uuid"
+        userId:
+          type: "string"
+          format: "uuid"
+          description: "User Identifier"
+        gameId:
+          type: "string"
+          format: "uuid"
+          description: "Game Identifier"
+        highScore:
+          type: "integer"
+          minimum: 0
+          description: "User high-score for a game"
+        lastSubmittedScore:
+          type: "integer"
+          minimum: 0
+          description: "Last submitted score for game-play"
+        lastSubmittedAt:
+          type: "string"
+          format: "date"
+          description: "Last submission date for game-play score"
+        submissionCount:
+          type: "integer"
+          minimum: 0
+          description: "Submission count based on lastSubmittedAt field (to keep track of game-play threshold as there is a daily submission max per game)"
+
+
+    StatusDto:
+      description: Status data, check additional message field.
+      type: object
+      required:
+        - success
+      properties:
+        success:
+          description: >-
+            Status can be successful or failed, a value of true indicates
+            success.
+          type: boolean
+          example: true
+        message:
+          type: string
+          description: additional message describing status.
+        data:
+          type: object
+          additionalProperties:
+            type: object
+            properties: {}
+          description: Data associated with the status, this will not always be present
+        error:
+          $ref: '#/components/schemas/ErrorMessageDto'
+      x-common-model: StatusDto
+
+    ErrorMessageDto:
+      description: >-
+        Default error object for services. This gives consistent error object
+        that all services may use.
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          description: Error code
+          example: UNKNOWN_ERROR
+        message:
+          type: string
+          description: Descriptive error message
+          example: Request could not be completed due to an error
+        data:
+          type: object
+          description: Additional data for this error message.
+          additionalProperties: true
+          properties: {}
+      x-common-model: ErrorMessageDto
+
+    # ENUM DEFINITIONS
+
+    Gender:
+      type: "string"
+      description: "List of human genders"
+      enum: &Gender
+        - MALE
+        - GEMALE
+        - OTHERS
+
+  parameters:
+    userIdParam:
+      in: "path"
+      name: "userId"
+      schema:
+        type: "string"
+        format: "uuid"
+      required: true
+      description: "User identifier in path"
+
+    gameIdParam:
+      in: "path"
+      name: "gameId"
+      schema:
+        type: "string"
+        format: "uuid"
+      required: true
+      description: "Game identifier in path"
+
+    identifierParam:
+      in: "path"
+      name: "identifier"
+      schema:
+        type: "string"
+      required: true
+      description: "User Id or username or email in path"
+
+    pageQuery:
+      in: "query"
+      name: page
+      schema:
+        type: "integer"
+        format: "int32"
+        minimum: 1
+        description: "Positive integer"
+      required: false
+      description: Page to be gotten based on size parameters
+
+    limitQuery:
+      in: "query"
+      name: limit
+      schema:
+        type: "integer"
+        format: "int32"
+        minimum: 1
+        description: "Positive integer"
+      required: false
+      description: Number of items to be gotten per page
+
+    sortQuery:
+      in: "query"
+      name: sort
+      schema:
+        type: "string"
+        pattern: '^([a-zA-Z]{2,}(:asc|:desc)?)+(?:(,([a-zA-Z]{2,}(:asc|:desc)?))*)$'
+      required: false
+      allowReserved: true
+      description: Sort string used to sort various fields in `asc` or `desc` order. E.g. `name:asc,createdAt:desc`
+
+    avatarQuery:
+      in: "query"
+      name: includeAvatar
+      schema:
+        type: "boolean"
+      required: false
+      description: Returns the user's avater if set to true
+
+  responses:
+    StatusResponse:
+      description: Request status
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/StatusDto"
+          example:
+            success: true
+            message: 'Action completed successfully'
+            data:
+              label: name of service
+              expiry: date
+
+    InvalidRequest:
+      description: Request could not be validated
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorMessageDto"
+          example:
+            code: 'BAD_REQUEST'
+            message: 'Request could not be validated.'
+
+    Unauthorized:
+      description: Client is not authorized to make request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorMessageDto"
+          example:
+            code: 'UNAUTHORIZED'
+            message: 'Either client security header is missing or it is not valid.'
+
+    NotFound:
+      description: Entity was not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorMessageDto"
+          example:
+            code: 'NOT_FOUND'
+            message: 'Information could not be found'
+
+    ConflictError:
+      description: Entity already exist while user tries to create it.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorMessageDto"
+          example:
+            code: 'ACCESS_DENIED'
+            message: 'Entity already exist!'
+
+    AccessDenied:
+      description: Expected permission is not available.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorMessageDto"
+          example:
+            code: 'ACCESS_DENIED'
+            message: 'Expected permission or scope is not present.'
+
+    UnprocessableError:
+      description: Entity could not be processed.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorMessageDto"
+          example:
+            code: 'UNPROCESSABLE'
+            message: 'Sorry we could not process your request'
+
+    ServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorMessageDto"
+          example:
+            code: 'INTERNAL_ERROR'
+            message: 'An internal server error occurred.'
+
+  securitySchemes:
+    bearerToken:
+      type: "http"
+      scheme: "bearer"
+      bearerFormat: "JWT"
+      description: "Authentication for user-facing endpoints. Uses bearer token in API prefix."
+    authToken:
+      type: "apiKey"
+      name: "x-auth-token"
+      in: "header"
+      description: "Auth Token header for inter-service communication"
