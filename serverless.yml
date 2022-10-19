@@ -2,7 +2,9 @@ service: aws-node-express-dynamodb-api-project
 frameworkVersion: '3'
 
 custom:
-  tableName: 'users-table-${sls:stage}'
+  tableName: 'user-${sls:stage}'
+  gameTableName: 'game-${sls:stage}'
+  # userGameHighscoreTableName: 'user-game-highscore-${sls:stage}'
 
 provider:
   name: aws
@@ -20,19 +22,89 @@ provider:
             - dynamodb:DeleteItem
           Resource:
             - Fn::GetAtt: [ UsersTable, Arn ]
+            - Fn::GetAtt: [ GamesTable, Arn ]
   environment:
     USERS_TABLE: ${self:custom.tableName}
+    GAMES_TABLE: ${self:custom.gameTableName}
+    # USER_GAME_HIGHSCORES_TABLE: ${self:custom.userGameHighscoreTableName}
+    JWT_TOKEN_SECRET: dhkvkhfvjkfkzwekjhrvheiavhikcvak
 
+# functions:
+#   api:
+#     handler: src/handler.handler
+#     events:
+#       - httpApi: '*'
+      
 functions:
-  api:
-    handler: src/handler.handler
+  registerUser:
+    handler: src/handler.registerUser
     events:
-      - httpApi: '*'
+      - httpApi:
+          path: /auth/register
+          method: post
+
+  login:
+    handler: src/handler.login
+    events:
+      - httpApi:
+          path: /auth/login
+          method: post
+
+  getMyProfile:
+    handler: src/handler.getMyProfile
+    events:
+      - httpApi:
+          path: /me
+          method: get
+
+  updateMyProfile:
+    handler: src/handler.updateMyProfile
+    events:
+      - httpApi:
+          path: /me
+          method: patch
+
+  changeUsername:
+    handler: src/handler.changeUsername
+    events:
+      - httpApi:
+          path: /me/username
+          method: put
+
+  createGame:
+    handler: src/handler.createGame
+    events:
+      - httpApi:
+          path: /games
+          method: post
+
+  updateGame:
+    handler: src/handler.updateGame
+    events:
+      - httpApi:
+          path: /games/{gameId}
+          method: patch
+
+  getGames:
+    handler: src/handler.getGames
+    events:
+      - httpApi:
+          path: /games
+          method: get
+
+  getGame:
+    handler: src/handler.getGame
+    events:
+      - httpApi:
+          path: /games/{gameId}
+          method: get
+
 
 # ENABLE TYPESCRIPT
 
 plugins:
   - serverless-plugin-typescript
+
 
 # CLOUD FORMATION CONFIGURATION
 
@@ -42,13 +114,27 @@ resources:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
-          - AttributeName: userId
+          - AttributeName: id
             AttributeType: S
         KeySchema:
-          - AttributeName: userId
+          - AttributeName: id
             KeyType: HASH
         # BillingMode: PAY_PER_REQUEST
         TableName: ${self:custom.tableName}
+        ProvisionedThroughput: # ADDED LINE FOR BILLING OPTIMIZATION
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    GamesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        # BillingMode: PAY_PER_REQUEST
+        TableName: ${self:custom.gameTableName}
         ProvisionedThroughput: # ADDED LINE FOR BILLING OPTIMIZATION
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1

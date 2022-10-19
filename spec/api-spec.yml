@@ -86,21 +86,21 @@ paths:
         "default":
           $ref: "#/components/responses/ServerError"
 
-  /auth/logout:
-    post:
-      summary: "Log user out"
-      description: "Log user out"
-      operationId: logout
-      x-visibility: public
-      tags:
-        - "auth"
-      responses:
-        "200":
-          $ref: "#/components/responses/StatusResponse"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "default":
-          $ref: "#/components/responses/ServerError"
+  # /auth/logout:
+  #   post:
+  #     summary: "Log user out"
+  #     description: "Log user out"
+  #     operationId: logout
+  #     x-visibility: public
+  #     tags:
+  #       - "auth"
+  #     responses:
+  #       "200":
+  #         $ref: "#/components/responses/StatusResponse"
+  #       "401":
+  #         $ref: "#/components/responses/Unauthorized"
+  #       "default":
+  #         $ref: "#/components/responses/ServerError"
 
   /games:
     post:
@@ -129,6 +129,28 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/AccessDenied"
+        "default":
+          $ref: "#/components/responses/ServerError"
+
+    get:
+      summary: "Get games"
+      description: "Get games"
+      operationId: getGames
+      x-visibility: "public"
+      tags:
+        - "games"
+      security: [ ]
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Game" # SHOULD BE A GAME LIST
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
         "default":
           $ref: "#/components/responses/ServerError"
 
@@ -407,7 +429,7 @@ components:
         name:
           type: "string"
           minLength: 1
-          description: "Game name"
+          description: "Name of game"
         description:
           type: string
           minLength: 6

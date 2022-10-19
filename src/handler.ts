@@ -1,67 +1,127 @@
+import "reflect-metadata";
+
 import AWS from "aws-sdk";
-import express from "express";
-import serverless from "serverless-http";
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
+import { UserValidator, GameValidator } from "./validators";
+import { AuthService } from "./services/auth.service";
+import { GameService } from "./services/game.service";
+import Container from "typedi";
+import { handleApiError, ResponseHandler, verifyAuthToken } from "./helpers";
+import { IAuthTokenPayload } from "./interfaces";
+import { UserService } from "./services/user.service";
 
-const app = express();
+// const USERS_TABLE = process.env.USERS_TABLE as string;
+// const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
 
-const USERS_TABLE = process.env.USERS_TABLE as string;
-const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
+const AUTH_SERVICE = Container.get(AuthService);
+const USER_SERVICE = Container.get(UserService);
+const GAME_SERVICE = Container.get(GameService);
 
-app.use(express.json());
+export const registerUser = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+  try { // event.headers["authorization"]
+    const REQ_BODY = JSON.parse(event.body as string);
+    await UserValidator.checkRegisterUser(REQ_BODY);
 
-app.get("/users/:userId", async function (req, res) {
-  const params = {
-    TableName: USERS_TABLE,
-    Key: {
-      userId: req.params.userId,
-    },
-  };
+    const USER = await AUTH_SERVICE.createUser(REQ_BODY);
+    return ResponseHandler.created(USER);
+  } catch (err: any) {
+    return handleApiError(err);
+  }
+};
 
+export const login = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   try {
-    const { Item } = await dynamoDbClient.get(params).promise();
-    if (Item) {
-      const { userId, name } = Item;
-      res.json({ userId, name });
-    } else {
-      res
-        .status(404)
-        .json({ error: 'Could not find user with provided "userId"' });
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Could not retreive user" });
+    const REQ_BODY = JSON.parse(event.body as string);
+    await UserValidator.checkLogin(REQ_BODY);
+
+    const USER = await AUTH_SERVICE.login(REQ_BODY);
+    return ResponseHandler.ok(USER);
+  } catch (err: any) {
+    return handleApiError(err);
   }
-});
+};
 
-app.post("/users", async function (req, res) {
-  const { userId, name } = req.body;
-  if (typeof userId !== "string") {
-    res.status(400).json({ error: '"userId" must be a string' });
-  } else if (typeof name !== "string") {
-    res.status(400).json({ error: '"name" must be a string' });
-  }
-
-  const params = {
-    TableName: USERS_TABLE,
-    Item: {
-      userId: userId,
-      name: name,
-    },
-  };
-
+export const createGame = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   try {
-    await dynamoDbClient.put(params).promise();
-    res.json({ userId, name });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Could not create user" });
+    const REQ_BODY = JSON.parse(event.body as string);
+    await GameValidator.checkCreateGame(REQ_BODY);
+
+    const USER = await GAME_SERVICE.createGame(REQ_BODY);
+    return ResponseHandler.created(USER);
+  } catch (err: any) {
+    return handleApiError(err);
   }
-});
+};
 
-app.use((req, res, next) => {
-  return res.status(404).json({
-    error: "Not Found",
-  });
-});
+export const updateGame = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+  try {
+    const GAME_ID: string = event.pathParameters?.gameId as string; // WHAT THIS IS UNDEFINED
+    const REQ_BODY = JSON.parse(event.body as string);
 
-export const handler = serverless(app);
+    await GameValidator.checkUpdateGame({ gameId: GAME_ID, ...REQ_BODY });
+    const GAME = await GAME_SERVICE.updateGame(GAME_ID, REQ_BODY);
+
+    return ResponseHandler.ok(GAME);
+  } catch (err: any) {
+    return handleApiError(err);
+  }
+};
+
+export const getGames = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+  try {
+    const GAMES = await GAME_SERVICE.getGames();
+    return ResponseHandler.ok(GAMES);
+  } catch (err: any) {
+    return handleApiError(err);
+  }
+};
+
+export const getGame = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+  try {
+    await GameValidator.checkGetGame(event.pathParameters); // WHAT IF undefined
+
+    const GAME = await GAME_SERVICE.getGame(event.pathParameters?.gameId as string);
+    return ResponseHandler.ok(GAME);
+  } catch (err: any) {
+    return handleApiError(err);
+  }
+};
+
+export const getMyProfile = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+  try {
+    const AUTH_DATA: IAuthTokenPayload = verifyAuthToken(event.headers);
+    const USER = await USER_SERVICE.getUser(AUTH_DATA.userId);
+
+    return ResponseHandler.ok(USER);
+  } catch (err: any) {
+    return handleApiError(err);
+  }
+};
+
+export const updateMyProfile = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+  try {
+    const AUTH_DATA: IAuthTokenPayload = verifyAuthToken(event.headers);
+    const REQ_BODY = JSON.parse(event.body as string);
+
+    await UserValidator.checkUpdateProfile(REQ_BODY);
+    const USER = await USER_SERVICE.updateUser(AUTH_DATA.userId, REQ_BODY);
+
+    return ResponseHandler.ok(USER);
+  } catch (err: any) {
+    return handleApiError(err);
+  }
+};
+
+export const changeUsername = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+  try {
+    const AUTH_DATA: IAuthTokenPayload = verifyAuthToken(event.headers);
+    const REQ_BODY = JSON.parse(event.body as string);
+
+    await UserValidator.checkChangeUsername(REQ_BODY);
+    const USER = await USER_SERVICE.changeUsername(AUTH_DATA.userId, REQ_BODY.username);
+
+    return ResponseHandler.ok(USER);
+  } catch (err: any) {
+    return handleApiError(err);
+  }
+};
