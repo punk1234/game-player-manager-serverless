@@ -20,7 +20,8 @@ export class DynamoDb implements IDbAdapter {
       tableName: string,
       key: Record<string, any>,
       updateExpr?: UpdateExpression,
-      exprAttrValueMap?: Record<string, any>
+      exprAttrValueMap?: Record<string, any>,
+      updateExprNames?: Record<string, any>
     ): Promise<T> {
 
       const output: UpdateItemOutput = await this.client.update({
@@ -28,6 +29,7 @@ export class DynamoDb implements IDbAdapter {
         Key: key,
         UpdateExpression: updateExpr && `SET ${updateExpr}`,
         ExpressionAttributeValues: exprAttrValueMap,
+        ExpressionAttributeNames: updateExprNames,
         ReturnValues: "ALL_NEW"
       }).promise();
 

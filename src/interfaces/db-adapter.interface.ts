@@ -8,7 +8,8 @@ export interface IDbAdapter {
       tableName: string,
       key: Record<string, any>,
       updateExpr?: string,
-      exprAttrValueMap?: Record<string, any>
+      exprAttrValueMap?: Record<string, any>,
+      updateExprNames?: Record<string, any>
     ): Promise<any>;
 
     getItemByKey(tableName: string, queryOpts: any): Promise<any>;

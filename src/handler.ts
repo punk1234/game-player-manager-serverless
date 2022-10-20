@@ -58,7 +58,7 @@ export const updateGame = async (event: APIGatewayProxyEvent): Promise<APIGatewa
     const GAME_ID: string = event.pathParameters?.gameId as string; // WHAT THIS IS UNDEFINED
     const REQ_BODY = JSON.parse(event.body as string);
 
-    await GameValidator.checkUpdateGame({ gameId: GAME_ID, ...REQ_BODY });
+    await GameValidator.checkUpdateGame({ ...REQ_BODY, gameId: GAME_ID });
     const GAME = await GAME_SERVICE.updateGame(GAME_ID, REQ_BODY);
 
     return ResponseHandler.ok(GAME);

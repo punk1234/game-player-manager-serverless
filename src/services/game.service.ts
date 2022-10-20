@@ -28,6 +28,10 @@ export class GameService {
 
   async updateGame(gameId: string, data: UpdateGameDto): Promise<Game> {
     const GAME = await this.checkThatGameExist(gameId);
+
+    // TODO: CHECK THAT USERNAME DOES NOT EXIST (probably GET by id & username)
+    // await this.checkThatGameWithNameDoesNotExist(GAME.name);
+
     let updateData: UpdateGameDto = {};
 
     if(data.name) {
@@ -49,18 +53,21 @@ export class GameService {
     }
 
     // MOVE LINE OF CODE INTO AN HELPER CLASS (DUPLICATE IN USER-SERVICE UPDATE)
-    let queryExprs: Array<string> = [], exprValueMap: Record<string, any> = {};
+    let queryExprs: Array<string> = [];
+    let exprValueMap: Record<string, any> = {}, updateExprNames: Record<string, any> = {};
 
     for(const [key, value] of Object.entries(data)) {
-      queryExprs.push(`${key} = :${key}`);
+      queryExprs.push(`#${key} = :${key}`);
       exprValueMap[`:${key}`] = value;
+      updateExprNames[`#${key}`] = key;
     }
 
     const UPDATED_GAME = await this.db.update<Game>(
-      config.USERS_TABLE,
+      config.GAMES_TABLE,
       { id: gameId },
       queryExprs.join(", "),
-      exprValueMap
+      exprValueMap,
+      updateExprNames
     );
 
     return UPDATED_GAME;
