@@ -457,8 +457,13 @@ components:
       type: "object"
       additionalProperties: false
       required:
+        - "gameId"
         - "score"
       properties:
+        gameId:
+          type: "string"
+          format: "uuid"
+          description: "Game Identifier"
         score:
           type: "integer"
           minimum: 0

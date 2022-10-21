@@ -90,7 +90,7 @@ export class GameService {
     );
   }
 
-  private async checkThatGameExist(id: string): Promise<Game> {
+  async checkThatGameExist(id: string): Promise<Game> {
     const GAME = await this.db.getItemByKey<Game>(config.GAMES_TABLE, { id });
 
     if(GAME) {

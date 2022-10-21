@@ -4,7 +4,7 @@ frameworkVersion: '3'
 custom:
   tableName: 'user-${sls:stage}'
   gameTableName: 'game-${sls:stage}'
-  # userGameHighscoreTableName: 'user-game-highscore-${sls:stage}'
+  userGameHighscoreTableName: 'user-game-highscore-${sls:stage}'
 
 provider:
   name: aws
@@ -23,10 +23,11 @@ provider:
           Resource:
             - Fn::GetAtt: [ UsersTable, Arn ]
             - Fn::GetAtt: [ GamesTable, Arn ]
+            - Fn::GetAtt: [ UserGameHighscoresTable, Arn ]
   environment:
     USERS_TABLE: ${self:custom.tableName}
     GAMES_TABLE: ${self:custom.gameTableName}
-    # USER_GAME_HIGHSCORES_TABLE: ${self:custom.userGameHighscoreTableName}
+    USER_GAME_HIGHSCORES_TABLE: ${self:custom.userGameHighscoreTableName}
     JWT_TOKEN_SECRET: dhkvkhfvjkfkzwekjhrvheiavhikcvak
 
 # functions:
@@ -99,6 +100,20 @@ functions:
           path: /games/{gameId}
           method: get
 
+  submitGameplayScore:
+    handler: src/handler.submitGameplayScore
+    events:
+      - httpApi:
+          path: /me/game-play/submit-score
+          method: post
+
+  getGameplaysHighScores:
+    handler: src/handler.getGameplaysHighScores
+    events:
+      - httpApi:
+          path: /me/game-plays/high-scores
+          method: get
+
 
 # ENABLE TYPESCRIPT
 
@@ -135,6 +150,20 @@ resources:
             KeyType: HASH
         # BillingMode: PAY_PER_REQUEST
         TableName: ${self:custom.gameTableName}
+        ProvisionedThroughput: # ADDED LINE FOR BILLING OPTIMIZATION
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    UserGameHighscoresTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        # BillingMode: PAY_PER_REQUEST
+        TableName: ${self:custom.userGameHighscoreTableName}
         ProvisionedThroughput: # ADDED LINE FOR BILLING OPTIMIZATION
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1

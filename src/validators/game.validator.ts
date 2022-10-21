@@ -11,7 +11,7 @@ export default class GameValidator extends BaseValidator {
     const schema = yup.object().shape({
       name: yup.string().required(),
       maxGamePlayScore: yup.number().positive().integer().required(),
-      dailyMaxScoreSubmission: yup.number().positive().integer().required(),
+      dailyMaxScoreSubmissionCount: yup.number().positive().integer().required(),
       description: yup.string()
     });
     
@@ -23,7 +23,7 @@ export default class GameValidator extends BaseValidator {
       gameId: yup.string().uuid().required(),
       name: yup.string(),
       maxGamePlayScore: yup.number().positive().integer(),
-      dailyMaxScoreSubmission: yup.number().positive().integer(),
+      dailyMaxScoreSubmissionCount: yup.number().positive().integer(),
       description: yup.string()
     });
     
