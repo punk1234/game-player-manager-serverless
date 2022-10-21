@@ -1,20 +1,19 @@
-import { randomUUID } from "crypto";
-import { Inject, Service } from "typedi";
+import {randomUUID} from 'crypto';
+import {Inject, Service} from 'typedi';
 
-import config from "../config";
-import { IAuthTokenPayload, IUser } from "../interfaces";
-import { default as C } from "../constants";
-import { UserService } from "./user.service";
-import { UserValidator } from "../validators";
-import { DynamoDb } from "../database/adapters";
-import { JwtHelper, PasswordHasher } from "../helpers";
-import { ConflictError, UnauthenticatedError } from "../exceptions";
-import { LoginDto, LoginResponse, RegisterUserDto, User } from "../models";
+import config from '../config';
+import {IAuthTokenPayload, IUser} from '../interfaces';
+import {default as C} from '../constants';
+import {UserService} from './user.service';
+import {UserValidator} from '../validators';
+import {DynamoDb} from '../database/adapters';
+import {JwtHelper, PasswordHasher} from '../helpers';
+import {ConflictError, UnauthenticatedError} from '../exceptions';
+import {LoginDto, LoginResponse, RegisterUserDto, User} from '../models';
 
 
 @Service()
 export class AuthService {
-
   constructor(@Inject() private userService: UserService) {}
 
   async createUser(data: RegisterUserDto): Promise<User> {
@@ -38,26 +37,25 @@ export class AuthService {
 
     const USER = await this.userService.getUserByUsername(data.username);
 
-    if(!USER) {
+    if (!USER) {
       throw new UnauthenticatedError(C.ResponseMessage.ERR_INVALID_CREDENTIALS);
     }
 
     const IS_CORRECT_PASSWORD = PasswordHasher.verify(data.password, USER.password as string);
-    if(!IS_CORRECT_PASSWORD) {
+    if (!IS_CORRECT_PASSWORD) {
       throw new UnauthenticatedError(C.ResponseMessage.ERR_INVALID_CREDENTIALS);
     }
 
     const AUTH_TOKEN: string = JwtHelper.generateToken({
       userId: USER.id,
-      isAdmin: USER.isAdmin
+      isAdmin: USER.isAdmin,
     } as IAuthTokenPayload, `${config.JWT_TOKEN_TTL_IN_HOURS}h`);
 
     delete USER.password;
 
     return {
       user: USER,
-      token: AUTH_TOKEN
+      token: AUTH_TOKEN,
     };
   }
-
 }

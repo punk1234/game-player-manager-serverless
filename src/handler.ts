@@ -1,15 +1,15 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 
-import AWS from "aws-sdk";
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import { UserValidator, GameValidator, GameplayScoreValidator } from "./validators";
-import { AuthService } from "./services/auth.service";
-import { GameService } from "./services/game.service";
-import Container from "typedi";
-import { handleApiError, ResponseHandler, verifyAuthToken } from "./helpers";
-import { IAuthTokenPayload } from "./interfaces";
-import { UserService } from "./services/user.service";
-import { GameplayScoreService } from "./services/game-play-score.service";
+import AWS from 'aws-sdk';
+import {APIGatewayProxyEvent, APIGatewayProxyResult} from 'aws-lambda';
+import {UserValidator, GameValidator, GameplayScoreValidator} from './validators';
+import {AuthService} from './services/auth.service';
+import {GameService} from './services/game.service';
+import Container from 'typedi';
+import {handleApiError, ResponseHandler, verifyAuthToken} from './helpers';
+import {IAuthTokenPayload} from './interfaces';
+import {UserService} from './services/user.service';
+import {GameplayScoreService} from './services/game-play-score.service';
 
 // const USERS_TABLE = process.env.USERS_TABLE as string;
 // const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
@@ -60,7 +60,7 @@ export const updateGame = async (event: APIGatewayProxyEvent): Promise<APIGatewa
     const GAME_ID: string = event.pathParameters?.gameId as string; // WHAT THIS IS UNDEFINED
     const REQ_BODY = JSON.parse(event.body as string);
 
-    await GameValidator.checkUpdateGame({ ...REQ_BODY, gameId: GAME_ID });
+    await GameValidator.checkUpdateGame({...REQ_BODY, gameId: GAME_ID});
     const GAME = await GAME_SERVICE.updateGame(GAME_ID, REQ_BODY);
 
     return ResponseHandler.ok(GAME);
@@ -135,9 +135,9 @@ export const submitGameplayScore = async (event: APIGatewayProxyEvent): Promise<
 
     await GameplayScoreValidator.checkScoreSubmission(REQ_BODY);
     const USER_GAMEPLAY_SCORE = await GAMEPLAY_SCORE_SERVICE.submitGameplayScore(
-      AUTH_DATA.userId,
-      REQ_BODY.gameId,
-      REQ_BODY.score
+        AUTH_DATA.userId,
+        REQ_BODY.gameId,
+        REQ_BODY.score,
     );
 
     return ResponseHandler.ok(USER_GAMEPLAY_SCORE);

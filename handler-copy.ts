@@ -1,6 +1,6 @@
-import AWS from "aws-sdk";
-import express from "express";
-import serverless from "serverless-http";
+import AWS from 'aws-sdk';
+import express from 'express';
+import serverless from 'serverless-http';
 
 const app = express();
 
@@ -9,7 +9,7 @@ const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
 
 app.use(express.json());
 
-app.get("/users/:userId", async function (req, res) {
+app.get('/users/:userId', async function(req, res) {
   const params = {
     TableName: USERS_TABLE,
     Key: {
@@ -18,27 +18,27 @@ app.get("/users/:userId", async function (req, res) {
   };
 
   try {
-    const { Item } = await dynamoDbClient.get(params).promise();
+    const {Item} = await dynamoDbClient.get(params).promise();
     if (Item) {
-      const { userId, name } = Item;
-      res.json({ userId, name });
+      const {userId, name} = Item;
+      res.json({userId, name});
     } else {
       res
-        .status(404)
-        .json({ error: 'Could not find user with provided "userId"' });
+          .status(404)
+          .json({error: 'Could not find user with provided "userId"'});
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Could not retreive user" });
+    res.status(500).json({error: 'Could not retreive user'});
   }
 });
 
-app.post("/users", async function (req, res) {
-  const { userId, name } = req.body;
-  if (typeof userId !== "string") {
-    res.status(400).json({ error: '"userId" must be a string' });
-  } else if (typeof name !== "string") {
-    res.status(400).json({ error: '"name" must be a string' });
+app.post('/users', async function(req, res) {
+  const {userId, name} = req.body;
+  if (typeof userId !== 'string') {
+    res.status(400).json({error: '"userId" must be a string'});
+  } else if (typeof name !== 'string') {
+    res.status(400).json({error: '"name" must be a string'});
   }
 
   const params = {
@@ -51,16 +51,16 @@ app.post("/users", async function (req, res) {
 
   try {
     await dynamoDbClient.put(params).promise();
-    res.json({ userId, name });
+    res.json({userId, name});
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Could not create user" });
+    res.status(500).json({error: 'Could not create user'});
   }
 });
 
 app.use((req, res, next) => {
   return res.status(404).json({
-    error: "Not Found",
+    error: 'Not Found',
   });
 });
 
