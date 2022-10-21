@@ -3,7 +3,7 @@
  */
 export interface IDbAdapter {
     create(tableName: string, data: any): Promise<void>;
-    
+
     update(
       tableName: string,
       key: Record<string, any>,
