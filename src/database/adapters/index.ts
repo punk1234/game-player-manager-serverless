@@ -1,1 +1,1 @@
-export * from './dynamodb-adapter';
+export * from "./dynamodb-adapter";
