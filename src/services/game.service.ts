@@ -63,18 +63,18 @@ export class GameService {
   /**
    * @method checkThatGameNameCanBeUpdated
    * @async
-   * @param {string|undefined} gameName 
-   * @param {string} gameId 
+   * @param {string|undefined} gameName
+   * @param {string} gameId
    * @returns {Promise<void>}
    */
-  async checkThatGameNameCanBeUpdated(gameName: string|undefined, gameId: string): Promise<void> {
-    if(!gameName) {
+  async checkThatGameNameCanBeUpdated(gameName: string | undefined, gameId: string): Promise<void> {
+    if (!gameName) {
       return;
     }
 
     const GAME_BY_NAME = await this.getGameByName(gameName);
 
-    if(GAME_BY_NAME?.name && GAME_BY_NAME.id !== gameId) {
+    if (GAME_BY_NAME?.name && GAME_BY_NAME.id !== gameId) {
       throw new ConflictError(`Game with name ${GAME_BY_NAME.name} already exist!`);
     }
   }
