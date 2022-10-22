@@ -1,24 +1,30 @@
 import "reflect-metadata";
 
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import { UserValidator, GameValidator, GameplayScoreValidator } from "./validators";
+import { GameValidator, GameplayScoreValidator } from "./validators";
 import { GameService } from "./services/game.service";
 import Container from "typedi";
 import { handleApiError, ResponseHandler, verifyAuthToken } from "./helpers";
 import { IAuthTokenPayload } from "./interfaces";
-import { UserService } from "./services/user.service";
 import { GameplayScoreService } from "./services/game-play-score.service";
-import { AuthApiHandler } from "./handlers";
+import { AuthApiHandler, UserApiHandler } from "./handlers";
 
-const USER_SERVICE = Container.get(UserService);
 const GAME_SERVICE = Container.get(GameService);
 const GAMEPLAY_SCORE_SERVICE = Container.get(GameplayScoreService);
 
 const AUTH_API_HANDLER = Container.get(AuthApiHandler);
+const USER_API_HANDLER = Container.get(UserApiHandler);
 
 // AUTH HANDLERS
 export const login = AUTH_API_HANDLER.login;
 export const registerUser = AUTH_API_HANDLER.registerUser;
+
+// USER HANDLERS
+export const getMyProfile = USER_API_HANDLER.getMyProfile;
+export const updateMyProfile = USER_API_HANDLER.updateMyProfile;
+export const changeUsername = USER_API_HANDLER.changeUsername;
+
+
 
 export const createGame = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   try {
@@ -61,45 +67,6 @@ export const getGame = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
 
     const GAME = await GAME_SERVICE.getGame(event.pathParameters?.gameId as string);
     return ResponseHandler.ok(GAME);
-  } catch (err: any) {
-    return handleApiError(err);
-  }
-};
-
-export const getMyProfile = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  try {
-    const AUTH_DATA: IAuthTokenPayload = verifyAuthToken(event.headers);
-    const USER = await USER_SERVICE.getUser(AUTH_DATA.userId);
-
-    return ResponseHandler.ok(USER);
-  } catch (err: any) {
-    return handleApiError(err);
-  }
-};
-
-export const updateMyProfile = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  try {
-    const AUTH_DATA: IAuthTokenPayload = verifyAuthToken(event.headers);
-    const REQ_BODY = JSON.parse(event.body as string);
-
-    await UserValidator.checkUpdateProfile(REQ_BODY);
-    const USER = await USER_SERVICE.updateUser(AUTH_DATA.userId, REQ_BODY);
-
-    return ResponseHandler.ok(USER);
-  } catch (err: any) {
-    return handleApiError(err);
-  }
-};
-
-export const changeUsername = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  try {
-    const AUTH_DATA: IAuthTokenPayload = verifyAuthToken(event.headers);
-    const REQ_BODY = JSON.parse(event.body as string);
-
-    await UserValidator.checkChangeUsername(REQ_BODY);
-    const USER = await USER_SERVICE.changeUsername(AUTH_DATA.userId, REQ_BODY.username);
-
-    return ResponseHandler.ok(USER);
   } catch (err: any) {
     return handleApiError(err);
   }
