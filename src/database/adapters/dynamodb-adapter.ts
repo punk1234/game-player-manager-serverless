@@ -99,7 +99,7 @@ export class DynamoDb implements IDbAdapter {
 
     return {
       queryExprs: queryExprs.join(", "),
-      exprValueMap
+      exprValueMap,
     };
   }
 
@@ -117,8 +117,7 @@ export class DynamoDb implements IDbAdapter {
     return {
       queryExprs: queryExprs.join(", "),
       exprValueMap,
-      updateExprNames
+      updateExprNames,
     };
   }
-
 }

@@ -35,37 +35,37 @@ export class GameplayScoreService {
     if (USER_GAME_PLAY_DATA) {
       return this.updateUserGameScoreRecord(USER_GAME_PLAY_DATA, GAME, score);
 
-    //   const { submissionCount, lastSubmittedAt } = USER_GAME_PLAY_DATA;
-    //   if (
-    //     submissionCount >= GAME.dailyMaxScoreSubmissionCount &&
-    //     new Date(lastSubmittedAt).toISOString().slice(0, 10) ==
-    //       new Date().toISOString().slice(0, 10)
-    //   ) {
-    //     throw new UnprocessableError("Maximum submission reached. Kindly try later!");
-    //   }
+      //   const { submissionCount, lastSubmittedAt } = USER_GAME_PLAY_DATA;
+      //   if (
+      //     submissionCount >= GAME.dailyMaxScoreSubmissionCount &&
+      //     new Date(lastSubmittedAt).toISOString().slice(0, 10) ==
+      //       new Date().toISOString().slice(0, 10)
+      //   ) {
+      //     throw new UnprocessableError("Maximum submission reached. Kindly try later!");
+      //   }
 
-    //   const UPDATE_DATA = {
-    //     lastSubmittedScore: score,
-    //     lastSubmittedAt: new Date().toISOString(),
-    //     highScore: Math.max(USER_GAME_PLAY_DATA.highScore, score),
-    //     submissionCount: USER_GAME_PLAY_DATA.submissionCount + 1,
-    //   };
+      //   const UPDATE_DATA = {
+      //     lastSubmittedScore: score,
+      //     lastSubmittedAt: new Date().toISOString(),
+      //     highScore: Math.max(USER_GAME_PLAY_DATA.highScore, score),
+      //     submissionCount: USER_GAME_PLAY_DATA.submissionCount + 1,
+      //   };
 
-    //   // MOVE LINE OF CODE INTO AN HELPER CLASS (DUPLICATE IN USER-SERVICE UPDATE)
-    //   const queryExprs: Array<string> = [];
-    //   const exprValueMap: Record<string, any> = {};
+      //   // MOVE LINE OF CODE INTO AN HELPER CLASS (DUPLICATE IN USER-SERVICE UPDATE)
+      //   const queryExprs: Array<string> = [];
+      //   const exprValueMap: Record<string, any> = {};
 
-    //   for (const [key, value] of Object.entries(UPDATE_DATA)) {
-    //     queryExprs.push(`${key} = :${key}`);
-    //     exprValueMap[`:${key}`] = value;
-    //   }
+      //   for (const [key, value] of Object.entries(UPDATE_DATA)) {
+      //     queryExprs.push(`${key} = :${key}`);
+      //     exprValueMap[`:${key}`] = value;
+      //   }
 
-    //   return this.db.update<UserGameHighScore>(
-    //     config.USER_GAME_HIGHSCORES_TABLE,
-    //     { id: USER_GAME_PLAY_DATA.id },
-    //     queryExprs.join(", "),
-    //     exprValueMap,
-    //   );
+      //   return this.db.update<UserGameHighScore>(
+      //     config.USER_GAME_HIGHSCORES_TABLE,
+      //     { id: USER_GAME_PLAY_DATA.id },
+      //     queryExprs.join(", "),
+      //     exprValueMap,
+      //   );
     }
 
     USER_GAME_PLAY_DATA = {
@@ -79,7 +79,7 @@ export class GameplayScoreService {
     };
 
     await this.db.create(config.USER_GAME_HIGHSCORES_TABLE, USER_GAME_PLAY_DATA);
-    
+
     return USER_GAME_PLAY_DATA;
   }
 
@@ -101,8 +101,8 @@ export class GameplayScoreService {
 
   /**
    * @method getUserGameScoreRecord
-   * @param {string} userId 
-   * @param {string} gameId 
+   * @param {string} userId
+   * @param {string} gameId
    * @returns {Promise<UserGameHighScore>}
    */
   getUserGameScoreRecord(userId: string, gameId: string): Promise<UserGameHighScore> {
@@ -116,9 +116,9 @@ export class GameplayScoreService {
   /**
    * @method updateUserGameScoreRecord
    * @async
-   * @param {UserGameHighScore} userGameplayData 
-   * @param {Game} game 
-   * @param {number} score 
+   * @param {UserGameHighScore} userGameplayData
+   * @param {Game} game
+   * @param {number} score
    * @returns {Promise<UserGameHighScore>}
    */
   async updateUserGameScoreRecord(
@@ -126,15 +126,15 @@ export class GameplayScoreService {
     game: Game,
     score: number,
   ): Promise<UserGameHighScore> {
-
-    let { submissionCount, lastSubmittedAt } = userGameplayData;
-
-    if (submissionCount >= game.dailyMaxScoreSubmissionCount) {
-      if(new Date(lastSubmittedAt).toISOString().slice(0, 10) == new Date().toISOString().slice(0, 10)) {
+    if (userGameplayData.submissionCount >= game.dailyMaxScoreSubmissionCount) {
+      if (
+        new Date(userGameplayData.lastSubmittedAt).toISOString().slice(0, 10) ==
+        new Date().toISOString().slice(0, 10)
+      ) {
         throw new UnprocessableError("Maximum submission reached. Kindly try later!");
       }
-      
-      submissionCount = 0;
+
+      userGameplayData.submissionCount = 0;
     }
 
     const UPDATE_DATA = {
@@ -144,7 +144,7 @@ export class GameplayScoreService {
       submissionCount: userGameplayData.submissionCount + 1,
     };
 
-      // MOVE LINE OF CODE INTO AN HELPER CLASS (DUPLICATE IN USER-SERVICE UPDATE)
+    // MOVE LINE OF CODE INTO AN HELPER CLASS (DUPLICATE IN USER-SERVICE UPDATE)
     //   const queryExprs: Array<string> = [];
     //   const exprValueMap: Record<string, any> = {};
 

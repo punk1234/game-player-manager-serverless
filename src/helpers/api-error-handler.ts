@@ -5,7 +5,7 @@ import { CustomError } from "../exceptions";
 
 /**
  * @function handleApiError
- * @param {Error} err 
+ * @param {Error} err
  * @returns {*}
  */
 export const handleApiError = (err: Error): any => {
