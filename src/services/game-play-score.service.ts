@@ -20,7 +20,11 @@ export class GameplayScoreService {
    * @param {number} score
    * @returns {Promise<UserGameHighScore>}
    */
-  async submitGameplayScore(userId: string, gameId: string, score: number): Promise<UserGameHighScore> {
+  async submitGameplayScore(
+    userId: string,
+    gameId: string,
+    score: number,
+  ): Promise<UserGameHighScore> {
     const GAME: Game = await this.gameService.checkThatGameExist(gameId);
     if (score > GAME.maxGamePlayScore) {
       throw new UnprocessableError(`Game score cannot be greater than ${GAME.maxGamePlayScore}`);
@@ -36,7 +40,8 @@ export class GameplayScoreService {
       const { submissionCount, lastSubmittedAt } = USER_GAME_PLAY_DATA;
       if (
         submissionCount >= GAME.dailyMaxScoreSubmissionCount &&
-        new Date(lastSubmittedAt).toISOString().slice(0, 10) == new Date().toISOString().slice(0, 10)
+        new Date(lastSubmittedAt).toISOString().slice(0, 10) ==
+          new Date().toISOString().slice(0, 10)
       ) {
         throw new UnprocessableError("Maximum submission reached. Kindly try later!");
       }
@@ -86,8 +91,12 @@ export class GameplayScoreService {
    * @returns {Promise<Array<UserGameHighScore>>}
    */
   async getGameplaysHighScores(userId: string): Promise<Array<UserGameHighScore>> {
-    return this.db.getItemsByFilter<Array<UserGameHighScore>>(config.USER_GAME_HIGHSCORES_TABLE, "userId = :userId", {
-      ":userId": userId,
-    });
+    return this.db.getItemsByFilter<Array<UserGameHighScore>>(
+      config.USER_GAME_HIGHSCORES_TABLE,
+      "userId = :userId",
+      {
+        ":userId": userId,
+      },
+    );
   }
 }

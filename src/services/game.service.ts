@@ -105,7 +105,12 @@ export class GameService {
    * @returns {Promise<Game>}
    */
   getGameByName(name: string): Promise<Game> {
-    return this.db.getItemByFilter<Game>(config.GAMES_TABLE, "#name = :name", { ":name": name }, { "#name": "name" });
+    return this.db.getItemByFilter<Game>(
+      config.GAMES_TABLE,
+      "#name = :name",
+      { ":name": name },
+      { "#name": "name" },
+    );
   }
 
   /**
