@@ -26,6 +26,7 @@ export class GameplayScoreService {
     score: number,
   ): Promise<UserGameHighScore> {
     const GAME: Game = await this.gameService.checkThatGameExist(gameId);
+
     if (score > GAME.maxGamePlayScore) {
       throw new UnprocessableError(`Game score cannot be greater than ${GAME.maxGamePlayScore}`);
     }
@@ -34,38 +35,6 @@ export class GameplayScoreService {
 
     if (USER_GAME_PLAY_DATA) {
       return this.updateUserGameScoreRecord(USER_GAME_PLAY_DATA, GAME, score);
-
-      //   const { submissionCount, lastSubmittedAt } = USER_GAME_PLAY_DATA;
-      //   if (
-      //     submissionCount >= GAME.dailyMaxScoreSubmissionCount &&
-      //     new Date(lastSubmittedAt).toISOString().slice(0, 10) ==
-      //       new Date().toISOString().slice(0, 10)
-      //   ) {
-      //     throw new UnprocessableError("Maximum submission reached. Kindly try later!");
-      //   }
-
-      //   const UPDATE_DATA = {
-      //     lastSubmittedScore: score,
-      //     lastSubmittedAt: new Date().toISOString(),
-      //     highScore: Math.max(USER_GAME_PLAY_DATA.highScore, score),
-      //     submissionCount: USER_GAME_PLAY_DATA.submissionCount + 1,
-      //   };
-
-      //   // MOVE LINE OF CODE INTO AN HELPER CLASS (DUPLICATE IN USER-SERVICE UPDATE)
-      //   const queryExprs: Array<string> = [];
-      //   const exprValueMap: Record<string, any> = {};
-
-      //   for (const [key, value] of Object.entries(UPDATE_DATA)) {
-      //     queryExprs.push(`${key} = :${key}`);
-      //     exprValueMap[`:${key}`] = value;
-      //   }
-
-      //   return this.db.update<UserGameHighScore>(
-      //     config.USER_GAME_HIGHSCORES_TABLE,
-      //     { id: USER_GAME_PLAY_DATA.id },
-      //     queryExprs.join(", "),
-      //     exprValueMap,
-      //   );
     }
 
     USER_GAME_PLAY_DATA = {
@@ -144,14 +113,6 @@ export class GameplayScoreService {
       submissionCount: userGameplayData.submissionCount + 1,
     };
 
-    // MOVE LINE OF CODE INTO AN HELPER CLASS (DUPLICATE IN USER-SERVICE UPDATE)
-    //   const queryExprs: Array<string> = [];
-    //   const exprValueMap: Record<string, any> = {};
-
-    //   for (const [key, value] of Object.entries(UPDATE_DATA)) {
-    //     queryExprs.push(`${key} = :${key}`);
-    //     exprValueMap[`:${key}`] = value;
-    //   }
     const DB_UPDATE_EXPRESSIONS = this.db.generateQuery(UPDATE_DATA);
 
     return this.db.update<UserGameHighScore>(

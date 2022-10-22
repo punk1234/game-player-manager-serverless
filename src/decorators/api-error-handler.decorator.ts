@@ -14,7 +14,7 @@ export default function () {
 
     descriptor.value = async function (...args: any[]): Promise<ReturnType<typeof originalMethod>> {
       try {
-        return originalMethod.apply(this, args);
+        return await originalMethod.apply(this, args);
       } catch (err: any) {
         return handleApiError(err);
       }
