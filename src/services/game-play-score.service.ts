@@ -12,6 +12,14 @@ export class GameplayScoreService {
   // eslint-disable-next-line
   constructor(@Inject() private db: DynamoDb, @Inject() private gameService: GameService) {}
 
+  /**
+   * @method submitGameplayScore
+   * @async
+   * @param {string} userId
+   * @param {string} gameId
+   * @param {number} score
+   * @returns {Promise<UserGameHighScore>}
+   */
   async submitGameplayScore(userId: string, gameId: string, score: number): Promise<UserGameHighScore> {
     const GAME: Game = await this.gameService.checkThatGameExist(gameId);
     if (score > GAME.maxGamePlayScore) {
