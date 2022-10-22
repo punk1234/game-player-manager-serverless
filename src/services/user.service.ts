@@ -52,19 +52,21 @@ export class UserService {
    * @returns {Promise<User>}
    */
   async updateUser(userId: string, data: UpdateUserDto): Promise<User> {
-    const queryExprs: Array<string> = [];
-    const exprValueMap: Record<string, any> = {};
+    // const queryExprs: Array<string> = [];
+    // const exprValueMap: Record<string, any> = {};
 
-    for (const [key, value] of Object.entries(data)) {
-      queryExprs.push(`${key} = :${key}`);
-      exprValueMap[`:${key}`] = value;
-    }
+    // for (const [key, value] of Object.entries(data)) {
+    //   queryExprs.push(`${key} = :${key}`);
+    //   exprValueMap[`:${key}`] = value;
+    // }
+
+    const DB_UPDATE_EXPRESSIONS = this.db.generateQuery(data);
 
     const UPDATED_USER = await this.db.update<IUser>(
       config.USERS_TABLE,
       { id: userId },
-      queryExprs.join(", "),
-      exprValueMap,
+      DB_UPDATE_EXPRESSIONS.queryExprs,
+      DB_UPDATE_EXPRESSIONS.exprValueMap,
     );
 
     return UPDATED_USER;

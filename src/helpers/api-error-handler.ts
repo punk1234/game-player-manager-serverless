@@ -3,7 +3,12 @@ import { ResponseHandler } from ".";
 import { default as C } from "../constants";
 import { CustomError } from "../exceptions";
 
-export const handleApiError = (err: Error) => {
+/**
+ * @function handleApiError
+ * @param {Error} err 
+ * @returns {*}
+ */
+export const handleApiError = (err: Error): any => {
   // Logger.error(`[APP ERROR]: ${err}`);
   console.log(`[APP ERROR]: ${err}`);
 

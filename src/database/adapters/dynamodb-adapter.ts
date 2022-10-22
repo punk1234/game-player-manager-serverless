@@ -7,7 +7,7 @@ import {
   UpdateItemOutput,
 } from "aws-sdk/clients/dynamodb";
 
-import { IDbAdapter } from "../../interfaces";
+import { IDbAdapter, IDbQueryExpressions } from "../../interfaces";
 
 @Service()
 export class DynamoDb implements IDbAdapter {
@@ -87,4 +87,38 @@ export class DynamoDb implements IDbAdapter {
 
     return items[0] as T;
   }
+
+  generateQuery(queryKeyValuePair: Record<string, any>): IDbQueryExpressions {
+    const queryExprs: Array<string> = [];
+    const exprValueMap: Record<string, any> = {};
+
+    for (const [key, value] of Object.entries(queryKeyValuePair)) {
+      queryExprs.push(`${key} = :${key}`);
+      exprValueMap[`:${key}`] = value;
+    }
+
+    return {
+      queryExprs: queryExprs.join(", "),
+      exprValueMap
+    };
+  }
+
+  generateQueryWithKeyword(queryKeyValuePair: Record<string, any>): IDbQueryExpressions {
+    const queryExprs: Array<string> = [];
+    const exprValueMap: Record<string, any> = {};
+    const updateExprNames: Record<string, any> = {};
+
+    for (const [key, value] of Object.entries(queryKeyValuePair)) {
+      queryExprs.push(`#${key} = :${key}`);
+      exprValueMap[`:${key}`] = value;
+      updateExprNames[`#${key}`] = key;
+    }
+
+    return {
+      queryExprs: queryExprs.join(", "),
+      exprValueMap,
+      updateExprNames
+    };
+  }
+
 }
