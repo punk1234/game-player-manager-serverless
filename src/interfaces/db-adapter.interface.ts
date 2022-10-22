@@ -21,6 +21,5 @@ export interface IDbAdapter {
     filterExprNames?: Record<string, any>,
   ): Promise<any>;
 
-  // getList(tableName: string, queryOpts: any): Promise<any>;
   // delete(tableName: string, queryOpts: any): Promise<any>;
 }

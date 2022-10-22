@@ -60,22 +60,24 @@ export class GameService {
     }
 
     // MOVE LINE OF CODE INTO AN HELPER CLASS (DUPLICATE IN USER-SERVICE UPDATE)
-    const queryExprs: Array<string> = [];
-    const exprValueMap: Record<string, any> = {};
-    const updateExprNames: Record<string, any> = {};
+    // const queryExprs: Array<string> = [];
+    // const exprValueMap: Record<string, any> = {};
+    // const updateExprNames: Record<string, any> = {};
 
-    for (const [key, value] of Object.entries(data)) {
-      queryExprs.push(`#${key} = :${key}`);
-      exprValueMap[`:${key}`] = value;
-      updateExprNames[`#${key}`] = key;
-    }
+    // for (const [key, value] of Object.entries(data)) {
+    //   queryExprs.push(`#${key} = :${key}`);
+    //   exprValueMap[`:${key}`] = value;
+    //   updateExprNames[`#${key}`] = key;
+    // }
+
+    const DB_UPDATE_EXPRESSIONS = this.db.generateQueryWithKeyword(data);
 
     const UPDATED_GAME = await this.db.update<Game>(
       config.GAMES_TABLE,
       { id: gameId },
-      queryExprs.join(", "),
-      exprValueMap,
-      updateExprNames,
+      DB_UPDATE_EXPRESSIONS.queryExprs,
+      DB_UPDATE_EXPRESSIONS.exprValueMap,
+      DB_UPDATE_EXPRESSIONS.updateExprNames,
     );
 
     return UPDATED_GAME;
