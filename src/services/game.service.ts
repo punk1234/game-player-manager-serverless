@@ -8,9 +8,16 @@ import { CreateGameDto, Game, UpdateGameDto } from "../models";
 
 @Service()
 export class GameService {
+
   // eslint-disable-next-line
   constructor(@Inject() private db: DynamoDb) {}
 
+  /**
+   * @method createGame
+   * @async
+   * @param {CreateGameDto} data 
+   * @returns {Promise<Game>}
+   */
   async createGame(data: CreateGameDto): Promise<Game> {
     await this.checkThatGameWithNameDoesNotExist(data.name);
 
@@ -20,6 +27,13 @@ export class GameService {
     return GAME_TO_CREATE;
   }
 
+  /**
+   * @method updateGame
+   * @async
+   * @param {string} gameId 
+   * @param {UpdateGameDto} data 
+   * @returns {Promise<Game>}
+   */
   async updateGame(gameId: string, data: UpdateGameDto): Promise<Game> {
     await this.checkThatGameExist(gameId);
 
@@ -68,18 +82,44 @@ export class GameService {
     return UPDATED_GAME;
   }
 
-  async getGames(): Promise<Game[]> {
+  /**
+   * @method getGames
+   * @returns {Promise<Game[]>}
+   */
+  getGames(): Promise<Game[]> {
     return this.db.getItemsByFilter<Game>(config.GAMES_TABLE);
   }
 
+  /**
+   * @method getGame
+   * @async
+   * @param {string} id 
+   * @returns {Promise<Game>}
+   */
   async getGame(id: string): Promise<Game> {
     return this.checkThatGameExist(id);
   }
 
-  async getGameByName(name: string): Promise<Game> {
-    return this.db.getItemByFilter<Game>(config.GAMES_TABLE, "#name = :name", { ":name": name }, { "#name": "name" });
+  /**
+   * @method getGameByName
+   * @param {string} name 
+   * @returns {Promise<Game>}
+   */
+  getGameByName(name: string): Promise<Game> {
+    return this.db.getItemByFilter<Game>(
+      config.GAMES_TABLE, 
+      "#name = :name", 
+      { ":name": name }, 
+      { "#name": "name" }
+    );
   }
 
+  /**
+   * @method checkThatGameExist
+   * @async
+   * @param {string} id 
+   * @returns {Promise<Game>}
+   */
   async checkThatGameExist(id: string): Promise<Game> {
     const GAME = await this.db.getItemByKey<Game>(config.GAMES_TABLE, { id });
 
@@ -90,6 +130,11 @@ export class GameService {
     throw new NotFoundError("Game not found!");
   }
 
+  /**
+   * @method checkThatGameWithNameDoesNotExist
+   * @async
+   * @param {string} gameName 
+   */
   private async checkThatGameWithNameDoesNotExist(gameName: string): Promise<void> {
     const game = await this.getGameByName(gameName);
 

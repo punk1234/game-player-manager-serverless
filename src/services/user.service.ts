@@ -1,11 +1,11 @@
 import { Inject, Service } from "typedi";
 
 import config from "../config";
-import { UpdateUserDto, User } from "../models";
 import { IUser } from "../interfaces";
 import { PasswordHasher } from "../helpers";
-import { ConflictError, NotFoundError, UnprocessableError } from "../exceptions";
 import { DynamoDb } from "../database/adapters";
+import { UpdateUserDto, User } from "../models";
+import { ConflictError, NotFoundError, UnprocessableError } from "../exceptions";
 
 @Service()
 export class UserService {
@@ -14,6 +14,7 @@ export class UserService {
 
   /**
    * @method createUser
+   * @async
    * @param {User} data
    * @param {string} plainTextPassword
    * @return {Promise<User>}
@@ -30,6 +31,12 @@ export class UserService {
     return USER_TO_CREATE;
   }
 
+  /**
+   * @method getUser
+   * @async
+   * @param {string} id 
+   * @returns {Promise<User>}
+   */
   async getUser(id: string): Promise<User> {
     const USER = await this.checkThatUserExist(id);
     delete USER.password;
@@ -37,6 +44,13 @@ export class UserService {
     return USER;
   }
 
+  /**
+   * @method updateUser
+   * @async
+   * @param {string} userId 
+   * @param {UpdateUserDto} data 
+   * @returns {Promise<User>}
+   */
   async updateUser(userId: string, data: UpdateUserDto): Promise<User> {
     const queryExprs: Array<string> = [];
     const exprValueMap: Record<string, any> = {};
@@ -56,6 +70,13 @@ export class UserService {
     return UPDATED_USER;
   }
 
+  /**
+   * @method changeUsername
+   * @async
+   * @param {string} userId 
+   * @param {string} newUsername 
+   * @returns {Promise<User>}
+   */
   async changeUsername(userId: string, newUsername: string): Promise<User> {
     const NEW_USERNAME_USER = await this.getUserByUsername(newUsername);
 
@@ -70,10 +91,21 @@ export class UserService {
     throw new UnprocessableError("Username has been taken!");
   }
 
+  /**
+   * @method getUserByUsername
+   * @param {string} username
+   * @returns {Promise<IUser>}
+   */
   async getUserByUsername(username: string): Promise<IUser> {
     return this.db.getItemByFilter<IUser>(config.USERS_TABLE, "username = :username", { ":username": username });
   }
 
+  /**
+   * @method checkThatUserExist
+   * @async
+   * @param {string} id 
+   * @returns {Promise<IUser>}
+   */
   async checkThatUserExist(id: string): Promise<IUser> {
     const USER = await this.db.getItemByKey<IUser>(config.USERS_TABLE, { id });
     if (USER) {
@@ -83,6 +115,11 @@ export class UserService {
     throw new NotFoundError("User not found!");
   }
 
+  /**
+   * @method checkThatUsernameDoesNotExist
+   * @async
+   * @param {string} username 
+   */
   async checkThatUsernameDoesNotExist(username: string): Promise<void> {
     const user = await this.getUserByUsername(username);
 

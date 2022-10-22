@@ -31,7 +31,7 @@ export class GameApiHandler {
    */
   @HandleExceptions()
   async updateGame(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
-    const GAME_ID: string = event.pathParameters?.gameId as string; // WHAT THIS IS UNDEFINED
+    const GAME_ID: string = event.pathParameters?.gameId as string; // WHAT IF THIS IS `undefined`
     const REQ_BODY = JSON.parse(event.body as string);
 
     await GameValidator.checkUpdateGame({ ...REQ_BODY, gameId: GAME_ID });
@@ -60,7 +60,7 @@ export class GameApiHandler {
    */
   @HandleExceptions()
   async getGame(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
-    await GameValidator.checkGetGame(event.pathParameters); // WHAT IF undefined
+    await GameValidator.checkGetGame(event.pathParameters); // WHAT IF THIS IS `undefined`
 
     const GAME = await GAME_SERVICE.getGame(event.pathParameters?.gameId as string);
 

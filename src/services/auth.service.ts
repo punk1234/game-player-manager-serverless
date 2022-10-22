@@ -12,9 +12,16 @@ import { LoginDto, LoginResponse, RegisterUserDto, User } from "../models";
 
 @Service()
 export class AuthService {
+
   // eslint-disable-next-line
   constructor(@Inject() private userService: UserService) {}
 
+  /**
+   * @method createUser
+   * @async
+   * @param {RegisterUserDto} data 
+   * @returns {Promise<User>}
+   */
   async createUser(data: RegisterUserDto): Promise<User> {
     await this.userService.checkThatUsernameDoesNotExist(data.username);
 
@@ -31,6 +38,12 @@ export class AuthService {
     return CREATED_USER;
   }
 
+  /**
+   * @method login
+   * @async
+   * @param {LoginDto} data 
+   * @returns {Promise<LoginResponse>}
+   */
   async login(data: LoginDto): Promise<LoginResponse> {
     UserValidator.checkLogin(data);
 
@@ -46,10 +59,7 @@ export class AuthService {
     }
 
     const AUTH_TOKEN: string = JwtHelper.generateToken(
-      {
-        userId: USER.id,
-        isAdmin: USER.isAdmin,
-      } as IAuthTokenPayload,
+      { userId: USER.id, isAdmin: USER.isAdmin } as IAuthTokenPayload,
       `${config.JWT_TOKEN_TTL_IN_HOURS}h`,
     );
 
@@ -60,4 +70,5 @@ export class AuthService {
       token: AUTH_TOKEN,
     };
   }
+
 }
