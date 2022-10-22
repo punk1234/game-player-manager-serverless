@@ -12,21 +12,21 @@
  * Do not edit the class manually.
  */
 /**
- * 
+ *
  * @export
  * @interface LoginDto
  */
 export interface LoginDto {
-    /**
-     * User's username in platform
-     * @type {string}
-     * @memberof LoginDto
-     */
-    username: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof LoginDto
-     */
-    password: string;
+  /**
+   * User's username in platform
+   * @type {string}
+   * @memberof LoginDto
+   */
+  username: string;
+  /**
+   *
+   * @type {string}
+   * @memberof LoginDto
+   */
+  password: string;
 }

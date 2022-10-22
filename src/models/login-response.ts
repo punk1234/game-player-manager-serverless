@@ -11,23 +11,23 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { User } from './user';
+import { User } from "./user";
 /**
- * 
+ *
  * @export
  * @interface LoginResponse
  */
 export interface LoginResponse {
-    /**
-     * 
-     * @type {User}
-     * @memberof LoginResponse
-     */
-    user: User;
-    /**
-     * User authentication token (JWT)
-     * @type {string}
-     * @memberof LoginResponse
-     */
-    token: string;
+  /**
+   *
+   * @type {User}
+   * @memberof LoginResponse
+   */
+  user: User;
+  /**
+   * User authentication token (JWT)
+   * @type {string}
+   * @memberof LoginResponse
+   */
+  token: string;
 }

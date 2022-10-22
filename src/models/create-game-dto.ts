@@ -12,33 +12,33 @@
  * Do not edit the class manually.
  */
 /**
- * 
+ *
  * @export
  * @interface CreateGameDto
  */
 export interface CreateGameDto {
-    /**
-     * Game name
-     * @type {string}
-     * @memberof CreateGameDto
-     */
-    name: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateGameDto
-     */
-    description?: string;
-    /**
-     * Maximum game-play score for a game
-     * @type {number}
-     * @memberof CreateGameDto
-     */
-    maxGamePlayScore: number;
-    /**
-     * Maximum game-play score submission count for a game (players are not allowed to submit more than the given value)
-     * @type {number}
-     * @memberof CreateGameDto
-     */
-    dailyMaxScoreSubmissionCount?: number;
+  /**
+   * Game name
+   * @type {string}
+   * @memberof CreateGameDto
+   */
+  name: string;
+  /**
+   *
+   * @type {string}
+   * @memberof CreateGameDto
+   */
+  description?: string;
+  /**
+   * Maximum game-play score for a game
+   * @type {number}
+   * @memberof CreateGameDto
+   */
+  maxGamePlayScore: number;
+  /**
+   * Maximum game-play score submission count for a game (players are not allowed to submit more than the given value)
+   * @type {number}
+   * @memberof CreateGameDto
+   */
+  dailyMaxScoreSubmissionCount: number;
 }

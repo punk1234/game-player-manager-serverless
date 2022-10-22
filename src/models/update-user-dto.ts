@@ -11,23 +11,23 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { Gender } from './gender';
+import { Gender } from "./gender";
 /**
- * 
+ *
  * @export
  * @interface UpdateUserDto
  */
 export interface UpdateUserDto {
-    /**
-     * 
-     * @type {Gender}
-     * @memberof UpdateUserDto
-     */
-    gender?: Gender;
-    /**
-     * User biography (information about user)
-     * @type {string}
-     * @memberof UpdateUserDto
-     */
-    bio?: string;
+  /**
+   *
+   * @type {Gender}
+   * @memberof UpdateUserDto
+   */
+  gender?: Gender;
+  /**
+   * User biography (information about user)
+   * @type {string}
+   * @memberof UpdateUserDto
+   */
+  bio?: string;
 }

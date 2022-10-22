@@ -1,9 +1,9 @@
-import {User} from "../models";
+import { User } from "../models";
 
 /**
  * @interface IUser
  * @extends User
  */
 export interface IUser extends User {
-    password?: string;
+  password?: string;
 }

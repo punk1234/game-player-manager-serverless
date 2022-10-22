@@ -12,45 +12,45 @@
  * Do not edit the class manually.
  */
 /**
- * 
+ *
  * @export
  * @interface Game
  */
 export interface Game {
-    /**
-     * 
-     * @type {string}
-     * @memberof Game
-     */
-    id: string;
-    /**
-     * Game name
-     * @type {string}
-     * @memberof Game
-     */
-    name: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Game
-     */
-    description?: string;
-    /**
-     * Maximum game-play score for a game
-     * @type {number}
-     * @memberof Game
-     */
-    maxGamePlayScore: number;
-    /**
-     * Maximum game-play score submission count for a game (players are not allowed to submit more than the given value)
-     * @type {number}
-     * @memberof Game
-     */
-    dailyMaxScoreSubmissionCount?: number;
-    /**
-     * Date & time game record was created
-     * @type {string}
-     * @memberof Game
-     */
-    createdAt?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Game
+   */
+  id: string;
+  /**
+   * Game name
+   * @type {string}
+   * @memberof Game
+   */
+  name: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Game
+   */
+  description?: string;
+  /**
+   * Maximum game-play score for a game
+   * @type {number}
+   * @memberof Game
+   */
+  maxGamePlayScore: number;
+  /**
+   * Maximum game-play score submission count for a game (players are not allowed to submit more than the given value)
+   * @type {number}
+   * @memberof Game
+   */
+  dailyMaxScoreSubmissionCount: number;
+  /**
+   * Date & time game record was created
+   * @type {string}
+   * @memberof Game
+   */
+  createdAt?: string;
 }

@@ -12,15 +12,15 @@
  * Do not edit the class manually.
  */
 /**
- * 
+ *
  * @export
  * @interface ChangeUsernameDto
  */
 export interface ChangeUsernameDto {
-    /**
-     * New username
-     * @type {string}
-     * @memberof ChangeUsernameDto
-     */
-    username: string;
+  /**
+   * New username
+   * @type {string}
+   * @memberof ChangeUsernameDto
+   */
+  username: string;
 }

@@ -17,9 +17,7 @@
  * @enum {string}
  */
 export enum Gender {
-    MALE = 'MALE',
-    GEMALE = 'GEMALE',
-    OTHERS = 'OTHERS'
+  MALE = "MALE",
+  GEMALE = "GEMALE",
+  OTHERS = "OTHERS",
 }
-
- 

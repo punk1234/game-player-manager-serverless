@@ -11,35 +11,35 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { ErrorMessageDto } from './error-message-dto';
+import { ErrorMessageDto } from "./error-message-dto";
 /**
  * Status data, check additional message field.
  * @export
  * @interface StatusDto
  */
 export interface StatusDto {
-    /**
-     * Status can be successful or failed, a value of true indicates success.
-     * @type {boolean}
-     * @memberof StatusDto
-     */
-    success: boolean;
-    /**
-     * additional message describing status.
-     * @type {string}
-     * @memberof StatusDto
-     */
-    message?: string;
-    /**
-     * Data associated with the status, this will not always be present
-     * @type {{ [key: string]: any; }}
-     * @memberof StatusDto
-     */
-    data?: { [key: string]: any; };
-    /**
-     * 
-     * @type {ErrorMessageDto}
-     * @memberof StatusDto
-     */
-    error?: ErrorMessageDto;
+  /**
+   * Status can be successful or failed, a value of true indicates success.
+   * @type {boolean}
+   * @memberof StatusDto
+   */
+  success: boolean;
+  /**
+   * additional message describing status.
+   * @type {string}
+   * @memberof StatusDto
+   */
+  message?: string;
+  /**
+   * Data associated with the status, this will not always be present
+   * @type {{ [key: string]: any; }}
+   * @memberof StatusDto
+   */
+  data?: { [key: string]: any };
+  /**
+   *
+   * @type {ErrorMessageDto}
+   * @memberof StatusDto
+   */
+  error?: ErrorMessageDto;
 }

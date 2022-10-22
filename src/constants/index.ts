@@ -1,4 +1,4 @@
-import {HttpStatusCode} from "./http-status-code.const";
-import {ResponseMessage} from "./response-message.const";
+import { HttpStatusCode } from "./http-status-code.const";
+import { ResponseMessage } from "./response-message.const";
 
-export default {HttpStatusCode, ResponseMessage};
+export default { HttpStatusCode, ResponseMessage };

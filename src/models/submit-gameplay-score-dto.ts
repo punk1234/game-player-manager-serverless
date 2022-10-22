@@ -12,15 +12,15 @@
  * Do not edit the class manually.
  */
 /**
- * 
+ *
  * @export
  * @interface SubmitGameplayScoreDto
  */
 export interface SubmitGameplayScoreDto {
-    /**
-     * User score for game-play
-     * @type {number}
-     * @memberof SubmitGameplayScoreDto
-     */
-    score: number;
+  /**
+   * User score for game-play
+   * @type {number}
+   * @memberof SubmitGameplayScoreDto
+   */
+  score: number;
 }
