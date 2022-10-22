@@ -1,101 +1,93 @@
-import {Inject, Service} from "typedi";
+import { Inject, Service } from "typedi";
 
 import config from "../config";
-import {UpdateUserDto, User} from "../models";
-import {IUser} from "../interfaces";
-import {PasswordHasher} from "../helpers";
-import {ConflictError, NotFoundError, UnprocessableError} from "../exceptions";
-import {DynamoDb} from "../database/adapters";
-
+import { UpdateUserDto, User } from "../models";
+import { IUser } from "../interfaces";
+import { PasswordHasher } from "../helpers";
+import { ConflictError, NotFoundError, UnprocessableError } from "../exceptions";
+import { DynamoDb } from "../database/adapters";
 
 @Service()
 export class UserService {
-    constructor(@Inject() private db: DynamoDb) {}
+  // eslint-disable-next-line
+  constructor(@Inject() private db: DynamoDb) {}
 
-    /**
+  /**
    * @method createUser
    * @param {User} data
    * @param {string} plainTextPassword
    * @return {Promise<User>}
    */
-    async createUser(data: User, plainTextPassword: string): Promise<User> {
-        const USER_TO_CREATE: IUser = {
-            ...data,
-            password: PasswordHasher.hash(plainTextPassword),
-        };
+  async createUser(data: User, plainTextPassword: string): Promise<User> {
+    const USER_TO_CREATE: IUser = {
+      ...data,
+      password: PasswordHasher.hash(plainTextPassword),
+    };
 
-        await this.db.create<User>(config.USERS_TABLE, USER_TO_CREATE);
-        delete USER_TO_CREATE.password;
+    await this.db.create(config.USERS_TABLE, USER_TO_CREATE);
+    delete USER_TO_CREATE.password;
 
-        return USER_TO_CREATE;
+    return USER_TO_CREATE;
+  }
+
+  async getUser(id: string): Promise<User> {
+    const USER = await this.checkThatUserExist(id);
+    delete USER.password;
+
+    return USER;
+  }
+
+  async updateUser(userId: string, data: UpdateUserDto): Promise<User> {
+    const queryExprs: Array<string> = [];
+    const exprValueMap: Record<string, any> = {};
+
+    for (const [key, value] of Object.entries(data)) {
+      queryExprs.push(`${key} = :${key}`);
+      exprValueMap[`:${key}`] = value;
     }
 
-    async getUser(id: string): Promise<User> {
-        const USER = await this.checkThatUserExist(id);
-        delete USER.password;
+    const UPDATED_USER = await this.db.update<IUser>(
+      config.USERS_TABLE,
+      { id: userId },
+      queryExprs.join(", "),
+      exprValueMap,
+    );
 
-        return USER;
+    return UPDATED_USER;
+  }
+
+  async changeUsername(userId: string, newUsername: string): Promise<User> {
+    const NEW_USERNAME_USER = await this.getUserByUsername(newUsername);
+
+    if (!NEW_USERNAME_USER) {
+      return this.db.update(config.USERS_TABLE, { id: userId }, "username = :username", { ":username": newUsername });
     }
 
-    async updateUser(userId: string, data: UpdateUserDto): Promise<User> {
-        const queryExprs: Array<string> = []; const exprValueMap: Record<string, any> = {};
-
-        for (const [key, value] of Object.entries(data)) {
-            queryExprs.push(`${key} = :${key}`);
-            exprValueMap[`:${key}`] = value;
-        }
-
-        const UPDATED_USER = await this.db.update<IUser>(
-            config.USERS_TABLE,
-            {id: userId},
-            queryExprs.join(", "),
-            exprValueMap,
-        );
-
-        return UPDATED_USER;
+    if (NEW_USERNAME_USER.id === userId) {
+      throw new ConflictError("New username is the same with current `username`");
     }
 
-    async changeUsername(userId: string, newUsername: string): Promise<User> {
-        const NEW_USERNAME_USER = await this.getUserByUsername(newUsername);
+    throw new UnprocessableError("Username has been taken!");
+  }
 
-        if (!NEW_USERNAME_USER) {
-            return this.db.update(
-                config.USERS_TABLE,
-                {id: userId},
-                "username = :username",
-                {":username": newUsername},
-            );
-        }
+  async getUserByUsername(username: string): Promise<IUser> {
+    return this.db.getItemByFilter<IUser>(config.USERS_TABLE, "username = :username", { ":username": username });
+  }
 
-        if (NEW_USERNAME_USER.id === userId) {
-            throw new ConflictError("New username is the same with current `username`");
-        }
-
-        throw new UnprocessableError("Username has been taken!");
+  async checkThatUserExist(id: string): Promise<IUser> {
+    const USER = await this.db.getItemByKey<IUser>(config.USERS_TABLE, { id });
+    if (USER) {
+      return USER;
     }
 
-    async getUserByUsername(username: string): Promise<IUser> {
-        return this.db.getItemByFilter<IUser>(
-            config.USERS_TABLE,
-            "username = :username",
-            {":username": username},
-        );
+    throw new NotFoundError("User not found!");
+  }
+
+  async checkThatUsernameDoesNotExist(username: string): Promise<void> {
+    const user = await this.getUserByUsername(username);
+
+    if (user) {
+      throw new ConflictError("Username already exist!");
     }
-
-    async checkThatUserExist(id: string): Promise<IUser> {
-        const USER = await this.db.getItemByKey<IUser>(config.USERS_TABLE, {id});
-        if (USER) {
-            return USER;
-        }
-
-        throw new NotFoundError("User not found!");
-    }
-
-    async checkThatUsernameDoesNotExist(username: string): Promise<void> {
-        const user = await this.getUserByUsername(username);
-
-        if (user) {
-            throw new ConflictError("Username already exist!");
-        }
-    }
+  }
 }

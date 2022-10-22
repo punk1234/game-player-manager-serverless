@@ -6,14 +6,14 @@ import CustomError from "./CustomError";
  * @extends CustomError
  */
 class ServerError extends CustomError {
-    /**
-     * @constructor
-     * @param {string} message
-     * @param {object} metaData
-     */
-    constructor(message: string, metaData: object = {}) {
-        super(K.HttpStatusCode.SERVER_ERROR, message, metaData);
-    }
+  /**
+   * @constructor
+   * @param {string} message
+   * @param {object} metaData
+   */
+  constructor(message: string, metaData: object = {}) {
+    super(K.HttpStatusCode.SERVER_ERROR, message, metaData);
+  }
 }
 
 export default ServerError;

@@ -7,14 +7,13 @@ import UnauthorizedError from "./UnauthorizedError";
 import UnprocessableError from "./UnprocessableError";
 import UnauthenticatedError from "./UnauthenticatedError";
 
-
 export {
-    CustomError,
-    ServerError,
-    NotFoundError,
-    ConflictError,
-    BadRequestError,
-    UnauthorizedError,
-    UnprocessableError,
-    UnauthenticatedError,
+  CustomError,
+  ServerError,
+  NotFoundError,
+  ConflictError,
+  BadRequestError,
+  UnauthorizedError,
+  UnprocessableError,
+  UnauthenticatedError,
 };

@@ -12,51 +12,51 @@
  * Do not edit the class manually.
  */
 /**
- * 
+ *
  * @export
  * @interface UserGameHighScore
  */
 export interface UserGameHighScore {
-    /**
-     * 
-     * @type {string}
-     * @memberof UserGameHighScore
-     */
-    id: string;
-    /**
-     * User Identifier
-     * @type {string}
-     * @memberof UserGameHighScore
-     */
-    userId: string;
-    /**
-     * Game Identifier
-     * @type {string}
-     * @memberof UserGameHighScore
-     */
-    gameId: string;
-    /**
-     * User high-score for a game
-     * @type {number}
-     * @memberof UserGameHighScore
-     */
-    highScore: number;
-    /**
-     * Last submitted score for game-play
-     * @type {number}
-     * @memberof UserGameHighScore
-     */
-    lastSubmittedScore: number;
-    /**
-     * Last submission date for game-play score
-     * @type {string}
-     * @memberof UserGameHighScore
-     */
-    lastSubmittedAt: string;
-    /**
-     * Submission count based on lastSubmittedAt field (to keep track of game-play threshold as there is a daily submission max per game)
-     * @type {number}
-     * @memberof UserGameHighScore
-     */
-    submissionCount: number;
+  /**
+   *
+   * @type {string}
+   * @memberof UserGameHighScore
+   */
+  id: string;
+  /**
+   * User Identifier
+   * @type {string}
+   * @memberof UserGameHighScore
+   */
+  userId: string;
+  /**
+   * Game Identifier
+   * @type {string}
+   * @memberof UserGameHighScore
+   */
+  gameId: string;
+  /**
+   * User high-score for a game
+   * @type {number}
+   * @memberof UserGameHighScore
+   */
+  highScore: number;
+  /**
+   * Last submitted score for game-play
+   * @type {number}
+   * @memberof UserGameHighScore
+   */
+  lastSubmittedScore: number;
+  /**
+   * Last submission date for game-play score
+   * @type {string}
+   * @memberof UserGameHighScore
+   */
+  lastSubmittedAt: string;
+  /**
+   * Submission count based on lastSubmittedAt field (to keep track of game-play threshold as there is a daily submission max per game)
+   * @type {number}
+   * @memberof UserGameHighScore
+   */
+  submissionCount: number;
 }

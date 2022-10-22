@@ -6,14 +6,14 @@ import CustomError from "./CustomError";
  * @extends CustomError
  */
 class UnauthenticatedError extends CustomError {
-    /**
-     * @constructor
-     * @param {string} message
-     * @param {object} metaData
-     */
-    constructor(message: string = K.ResponseMessage.ERR_UNAUTHENTICATED, metaData: object = {}) {
-        super(K.HttpStatusCode.UNAUTHENTICATED, message, metaData);
-    }
+  /**
+   * @constructor
+   * @param {string} message
+   * @param {object} metaData
+   */
+  constructor(message: string = K.ResponseMessage.ERR_UNAUTHENTICATED, metaData: object = {}) {
+    super(K.HttpStatusCode.UNAUTHENTICATED, message, metaData);
+  }
 }
 
 export default UnauthenticatedError;
