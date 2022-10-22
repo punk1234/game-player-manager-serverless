@@ -15,9 +15,9 @@ export class GameplayScoreService {
   /**
    * @method submitGameplayScore
    * @async
-   * @param {string} userId 
-   * @param {string} gameId 
-   * @param {number} score 
+   * @param {string} userId
+   * @param {string} gameId
+   * @param {number} score
    * @returns {Promise<UserGameHighScore>}
    */
   async submitGameplayScore(userId: string, gameId: string, score: number): Promise<UserGameHighScore> {

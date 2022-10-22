@@ -34,7 +34,7 @@ export class UserService {
   /**
    * @method getUser
    * @async
-   * @param {string} id 
+   * @param {string} id
    * @returns {Promise<User>}
    */
   async getUser(id: string): Promise<User> {
@@ -47,8 +47,8 @@ export class UserService {
   /**
    * @method updateUser
    * @async
-   * @param {string} userId 
-   * @param {UpdateUserDto} data 
+   * @param {string} userId
+   * @param {UpdateUserDto} data
    * @returns {Promise<User>}
    */
   async updateUser(userId: string, data: UpdateUserDto): Promise<User> {
@@ -73,8 +73,8 @@ export class UserService {
   /**
    * @method changeUsername
    * @async
-   * @param {string} userId 
-   * @param {string} newUsername 
+   * @param {string} userId
+   * @param {string} newUsername
    * @returns {Promise<User>}
    */
   async changeUsername(userId: string, newUsername: string): Promise<User> {
@@ -103,7 +103,7 @@ export class UserService {
   /**
    * @method checkThatUserExist
    * @async
-   * @param {string} id 
+   * @param {string} id
    * @returns {Promise<IUser>}
    */
   async checkThatUserExist(id: string): Promise<IUser> {
@@ -118,7 +118,7 @@ export class UserService {
   /**
    * @method checkThatUsernameDoesNotExist
    * @async
-   * @param {string} username 
+   * @param {string} username
    */
   async checkThatUsernameDoesNotExist(username: string): Promise<void> {
     const user = await this.getUserByUsername(username);

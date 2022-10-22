@@ -8,14 +8,13 @@ import { CreateGameDto, Game, UpdateGameDto } from "../models";
 
 @Service()
 export class GameService {
-
   // eslint-disable-next-line
   constructor(@Inject() private db: DynamoDb) {}
 
   /**
    * @method createGame
    * @async
-   * @param {CreateGameDto} data 
+   * @param {CreateGameDto} data
    * @returns {Promise<Game>}
    */
   async createGame(data: CreateGameDto): Promise<Game> {
@@ -30,8 +29,8 @@ export class GameService {
   /**
    * @method updateGame
    * @async
-   * @param {string} gameId 
-   * @param {UpdateGameDto} data 
+   * @param {string} gameId
+   * @param {UpdateGameDto} data
    * @returns {Promise<Game>}
    */
   async updateGame(gameId: string, data: UpdateGameDto): Promise<Game> {
@@ -93,7 +92,7 @@ export class GameService {
   /**
    * @method getGame
    * @async
-   * @param {string} id 
+   * @param {string} id
    * @returns {Promise<Game>}
    */
   async getGame(id: string): Promise<Game> {
@@ -102,22 +101,17 @@ export class GameService {
 
   /**
    * @method getGameByName
-   * @param {string} name 
+   * @param {string} name
    * @returns {Promise<Game>}
    */
   getGameByName(name: string): Promise<Game> {
-    return this.db.getItemByFilter<Game>(
-      config.GAMES_TABLE, 
-      "#name = :name", 
-      { ":name": name }, 
-      { "#name": "name" }
-    );
+    return this.db.getItemByFilter<Game>(config.GAMES_TABLE, "#name = :name", { ":name": name }, { "#name": "name" });
   }
 
   /**
    * @method checkThatGameExist
    * @async
-   * @param {string} id 
+   * @param {string} id
    * @returns {Promise<Game>}
    */
   async checkThatGameExist(id: string): Promise<Game> {
@@ -133,7 +127,7 @@ export class GameService {
   /**
    * @method checkThatGameWithNameDoesNotExist
    * @async
-   * @param {string} gameName 
+   * @param {string} gameName
    */
   private async checkThatGameWithNameDoesNotExist(gameName: string): Promise<void> {
     const game = await this.getGameByName(gameName);

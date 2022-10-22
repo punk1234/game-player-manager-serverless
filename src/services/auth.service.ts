@@ -12,14 +12,13 @@ import { LoginDto, LoginResponse, RegisterUserDto, User } from "../models";
 
 @Service()
 export class AuthService {
-
   // eslint-disable-next-line
   constructor(@Inject() private userService: UserService) {}
 
   /**
    * @method createUser
    * @async
-   * @param {RegisterUserDto} data 
+   * @param {RegisterUserDto} data
    * @returns {Promise<User>}
    */
   async createUser(data: RegisterUserDto): Promise<User> {
@@ -41,7 +40,7 @@ export class AuthService {
   /**
    * @method login
    * @async
-   * @param {LoginDto} data 
+   * @param {LoginDto} data
    * @returns {Promise<LoginResponse>}
    */
   async login(data: LoginDto): Promise<LoginResponse> {
@@ -70,5 +69,4 @@ export class AuthService {
       token: AUTH_TOKEN,
     };
   }
-
 }
