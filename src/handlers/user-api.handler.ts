@@ -1,3 +1,1 @@
-export class UserApiHandler {
-
-}
+export class UserApiHandler {}

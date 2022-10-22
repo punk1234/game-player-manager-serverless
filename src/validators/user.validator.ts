@@ -7,6 +7,7 @@ import { ValidateRequest } from "../decorators";
 @Service()
 @ValidateRequest({ abortEarly: false })
 export default class UserValidator extends BaseValidator {
+  // eslint-disable-next-line
   checkRegisterUser(data: any): any {
     return yup.object().shape({
       username: yup.string().required(),
@@ -19,6 +20,7 @@ export default class UserValidator extends BaseValidator {
     // await schema.validate(data, this.validationOpts);
   }
 
+  // eslint-disable-next-line
   checkLogin(data: any): any {
     return yup.object().shape({
       username: yup.string().required(),
@@ -28,6 +30,7 @@ export default class UserValidator extends BaseValidator {
     // await schema.validate(data, this.validationOpts);
   }
 
+  // eslint-disable-next-line
   checkUpdateProfile(data: any): any {
     return yup.object().shape({
       gender: yup.mixed().oneOf(Object.values(Gender)),
@@ -37,6 +40,7 @@ export default class UserValidator extends BaseValidator {
     // await schema.validate(data, this.validationOpts);
   }
 
+  // eslint-disable-next-line
   checkChangeUsername(data: any): any {
     return yup.object().shape({
       username: yup.string().required(),

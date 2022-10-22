@@ -10,35 +10,33 @@ const AUTH_SERVICE = Container.get(AuthService);
 
 @Service()
 export class AuthApiHandler {
+  /**
+   * @method registerUser
+   * @param {APIGatewayProxyEvent} event
+   * @returns {Promise<APIGatewayProxyResult>}
+   */
+  @HandleExceptions()
+  async registerUser(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
+    const REQ_BODY = JSON.parse(event.body as string);
+    await UserValidator.checkRegisterUser(REQ_BODY);
 
-    /**
-     * @method registerUser
-     * @param {APIGatewayProxyEvent} event 
-     * @returns {Promise<APIGatewayProxyResult>}
-     */
-    @HandleExceptions()
-    async registerUser(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
-        const REQ_BODY = JSON.parse(event.body as string);
-        await UserValidator.checkRegisterUser(REQ_BODY);
+    const USER = await AUTH_SERVICE.createUser(REQ_BODY);
 
-        const USER = await AUTH_SERVICE.createUser(REQ_BODY);
+    return ResponseHandler.created(USER);
+  }
 
-        return ResponseHandler.created(USER);
-    }
-    
-    /**
-     * @method login
-     * @param {APIGatewayProxyEvent} event 
-     * @returns {Promise<APIGatewayProxyResult>}
-     */
-    @HandleExceptions()
-    async login(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
-        const REQ_BODY = JSON.parse(event.body as string);
-        await UserValidator.checkLogin(REQ_BODY);
-      
-        const LOGIN_RESPONSE = await AUTH_SERVICE.login(REQ_BODY);
+  /**
+   * @method login
+   * @param {APIGatewayProxyEvent} event
+   * @returns {Promise<APIGatewayProxyResult>}
+   */
+  @HandleExceptions()
+  async login(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
+    const REQ_BODY = JSON.parse(event.body as string);
+    await UserValidator.checkLogin(REQ_BODY);
 
-        return ResponseHandler.ok(LOGIN_RESPONSE);
-    };
+    const LOGIN_RESPONSE = await AUTH_SERVICE.login(REQ_BODY);
 
+    return ResponseHandler.ok(LOGIN_RESPONSE);
+  }
 }
