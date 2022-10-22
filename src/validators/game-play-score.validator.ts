@@ -6,10 +6,9 @@ import { ValidateRequest } from "../decorators";
 @Service()
 @ValidateRequest({ abortEarly: false })
 export default class GamePlayScoreValidator extends BaseValidator {
-
   /**
    * @method checkScoreSubmission
-   * @param {*} data 
+   * @param {*} data
    * @returns {any}
    */
   // eslint-disable-next-line
@@ -19,5 +18,4 @@ export default class GamePlayScoreValidator extends BaseValidator {
       score: yup.number().positive().integer().required(),
     });
   }
-
 }

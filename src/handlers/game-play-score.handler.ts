@@ -11,7 +11,6 @@ const GAMEPLAY_SCORE_SERVICE = Container.get(GameplayScoreService);
 
 @Service()
 export class GameplayScoreApiHandler {
-    
   /**
    * @method submitGameplayScore
    * @param {APIGatewayProxyEvent} event
@@ -21,7 +20,7 @@ export class GameplayScoreApiHandler {
   async submitGameplayScore(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
     const AUTH_DATA: IAuthTokenPayload = verifyAuthToken(event.headers);
     const REQ_BODY = JSON.parse(event.body as string);
-  
+
     await GameplayScoreValidator.checkScoreSubmission(REQ_BODY);
 
     const USER_GAMEPLAY_SCORE = await GAMEPLAY_SCORE_SERVICE.submitGameplayScore(
@@ -29,7 +28,7 @@ export class GameplayScoreApiHandler {
       REQ_BODY.gameId,
       REQ_BODY.score,
     );
-  
+
     return ResponseHandler.ok(USER_GAMEPLAY_SCORE);
   }
 
@@ -42,8 +41,7 @@ export class GameplayScoreApiHandler {
   async getGameplaysHighScores(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
     const AUTH_DATA: IAuthTokenPayload = verifyAuthToken(event.headers);
     const USER_GAMEPLAY_HIGHSCORES = await GAMEPLAY_SCORE_SERVICE.getGameplaysHighScores(AUTH_DATA.userId);
-  
+
     return ResponseHandler.ok(USER_GAMEPLAY_HIGHSCORES);
   }
-
 }

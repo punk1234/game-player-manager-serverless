@@ -6,10 +6,9 @@ import { ValidateRequest } from "../decorators";
 @Service()
 @ValidateRequest({ abortEarly: false })
 export default class GameValidator extends BaseValidator {
-
   /**
    * @method checkCreateGame
-   * @param {*} data 
+   * @param {*} data
    * @returns {any}
    */
   // eslint-disable-next-line
@@ -24,7 +23,7 @@ export default class GameValidator extends BaseValidator {
 
   /**
    * @method checkUpdateGame
-   * @param {*} data 
+   * @param {*} data
    * @returns {any}
    */
   // eslint-disable-next-line
@@ -40,7 +39,7 @@ export default class GameValidator extends BaseValidator {
 
   /**
    * @method checkGetGame
-   * @param {*} data 
+   * @param {*} data
    * @returns {any}
    */
   // eslint-disable-next-line

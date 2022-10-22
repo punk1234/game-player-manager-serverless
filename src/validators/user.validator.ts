@@ -7,10 +7,9 @@ import { ValidateRequest } from "../decorators";
 @Service()
 @ValidateRequest({ abortEarly: false })
 export default class UserValidator extends BaseValidator {
-
   /**
    * @method checkRegisterUser
-   * @param {*} data 
+   * @param {*} data
    * @returns {any}
    */
   // eslint-disable-next-line
@@ -26,7 +25,7 @@ export default class UserValidator extends BaseValidator {
 
   /**
    * @method checkLogin
-   * @param {*} data 
+   * @param {*} data
    * @returns {any}
    */
   // eslint-disable-next-line
@@ -39,7 +38,7 @@ export default class UserValidator extends BaseValidator {
 
   /**
    * @method checkUpdateProfile
-   * @param {*} data 
+   * @param {*} data
    * @returns {any}
    */
   // eslint-disable-next-line
@@ -52,7 +51,7 @@ export default class UserValidator extends BaseValidator {
 
   /**
    * @method checkChangeUsername
-   * @param {*} data 
+   * @param {*} data
    * @returns {any}
    */
   // eslint-disable-next-line

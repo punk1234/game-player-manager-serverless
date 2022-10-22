@@ -11,7 +11,6 @@ const USER_SERVICE = Container.get(UserService);
 
 @Service()
 export class UserApiHandler {
-    
   /**
    * @method getMyProfile
    * @param {APIGatewayProxyEvent} event
@@ -21,7 +20,7 @@ export class UserApiHandler {
   async getMyProfile(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
     const AUTH_DATA: IAuthTokenPayload = verifyAuthToken(event.headers);
     const USER = await USER_SERVICE.getUser(AUTH_DATA.userId);
-  
+
     return ResponseHandler.ok(USER);
   }
 
@@ -34,7 +33,7 @@ export class UserApiHandler {
   async updateMyProfile(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
     const AUTH_DATA: IAuthTokenPayload = verifyAuthToken(event.headers);
     const REQ_BODY = JSON.parse(event.body as string);
-  
+
     await UserValidator.checkUpdateProfile(REQ_BODY);
     const USER = await USER_SERVICE.updateUser(AUTH_DATA.userId, REQ_BODY);
 
@@ -50,11 +49,10 @@ export class UserApiHandler {
   async changeUsername(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
     const AUTH_DATA: IAuthTokenPayload = verifyAuthToken(event.headers);
     const REQ_BODY = JSON.parse(event.body as string);
-  
+
     await UserValidator.checkChangeUsername(REQ_BODY);
 
     const USER = await USER_SERVICE.changeUsername(AUTH_DATA.userId, REQ_BODY.username);
     return ResponseHandler.ok(USER);
-   }
-
+  }
 }
