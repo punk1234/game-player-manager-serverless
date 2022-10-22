@@ -35,42 +35,19 @@ export class GameService {
    */
   async updateGame(gameId: string, data: UpdateGameDto): Promise<Game> {
     await this.checkThatGameExist(gameId);
-
-    // TODO: CHECK THAT USERNAME DOES NOT EXIST (probably GET by id & username)
-    // await this.checkThatGameWithNameDoesNotExist(GAME.name);
+    await this.checkThatGameNameCanBeUpdated(data.name, gameId);
 
     const updateData: UpdateGameDto = {};
 
-    if (data.name) {
-      updateData.name = data.name;
-    }
-
-    // data.name && (updateData.name = data.name); // USE SHORT FORM
-
-    if (data.maxGamePlayScore) {
-      updateData.maxGamePlayScore = data.maxGamePlayScore;
-    }
+    data.name && (updateData.name = data.name);
+    data.description && (updateData.description = data.description);
+    data.maxGamePlayScore && (updateData.maxGamePlayScore = data.maxGamePlayScore);
 
     if (data.dailyMaxScoreSubmissionCount) {
       updateData.dailyMaxScoreSubmissionCount = data.dailyMaxScoreSubmissionCount;
     }
 
-    if (data.description) {
-      updateData.description = data.description;
-    }
-
-    // MOVE LINE OF CODE INTO AN HELPER CLASS (DUPLICATE IN USER-SERVICE UPDATE)
-    // const queryExprs: Array<string> = [];
-    // const exprValueMap: Record<string, any> = {};
-    // const updateExprNames: Record<string, any> = {};
-
-    // for (const [key, value] of Object.entries(data)) {
-    //   queryExprs.push(`#${key} = :${key}`);
-    //   exprValueMap[`:${key}`] = value;
-    //   updateExprNames[`#${key}`] = key;
-    // }
-
-    const DB_UPDATE_EXPRESSIONS = this.db.generateQueryWithKeyword(data);
+    const DB_UPDATE_EXPRESSIONS = this.db.generateQueryWithKeyword(updateData);
 
     const UPDATED_GAME = await this.db.update<Game>(
       config.GAMES_TABLE,
@@ -81,6 +58,25 @@ export class GameService {
     );
 
     return UPDATED_GAME;
+  }
+
+  /**
+   * @method checkThatGameNameCanBeUpdated
+   * @async
+   * @param {string|undefined} gameName 
+   * @param {string} gameId 
+   * @returns {Promise<void>}
+   */
+  async checkThatGameNameCanBeUpdated(gameName: string|undefined, gameId: string): Promise<void> {
+    if(!gameName) {
+      return;
+    }
+
+    const GAME_BY_NAME = await this.getGameByName(gameName);
+
+    if(GAME_BY_NAME?.name && GAME_BY_NAME.id !== gameId) {
+      throw new ConflictError(`Game with name ${GAME_BY_NAME.name} already exist!`);
+    }
   }
 
   /**
