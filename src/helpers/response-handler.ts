@@ -35,7 +35,11 @@ export class ResponseHandler {
    * @param {string} [message] Optional response message
    * @memberOf ResponseHandler
    */
-  static send(statusCode: HttpStatusCode, data?: object, message: string = C.ResponseMessage.SUCCESS) {
+  static send(
+    statusCode: HttpStatusCode,
+    data?: object,
+    message: string = C.ResponseMessage.SUCCESS,
+  ) {
     return {
       statusCode,
       headers: this.headers,

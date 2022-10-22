@@ -1,7 +1,12 @@
 import "reflect-metadata";
 
 import Container from "typedi";
-import { AuthApiHandler, GameApiHandler, GameplayScoreApiHandler, UserApiHandler } from "./handlers";
+import {
+  AuthApiHandler,
+  GameApiHandler,
+  GameplayScoreApiHandler,
+  UserApiHandler,
+} from "./handlers";
 
 const AUTH_API_HANDLER = Container.get(AuthApiHandler);
 const USER_API_HANDLER = Container.get(UserApiHandler);

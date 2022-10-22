@@ -8,7 +8,11 @@ export const handleApiError = (err: Error) => {
   console.log(`[APP ERROR]: ${err}`);
 
   if (err instanceof yup.ValidationError || err instanceof SyntaxError) {
-    return ResponseHandler.send(C.HttpStatusCode.BAD_REQUEST, { errors: (err as any).errors }, err.message);
+    return ResponseHandler.send(
+      C.HttpStatusCode.BAD_REQUEST,
+      { errors: (err as any).errors },
+      err.message,
+    );
   }
 
   if (err instanceof CustomError) {

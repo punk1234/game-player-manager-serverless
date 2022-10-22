@@ -81,7 +81,9 @@ export class UserService {
     const NEW_USERNAME_USER = await this.getUserByUsername(newUsername);
 
     if (!NEW_USERNAME_USER) {
-      return this.db.update(config.USERS_TABLE, { id: userId }, "username = :username", { ":username": newUsername });
+      return this.db.update(config.USERS_TABLE, { id: userId }, "username = :username", {
+        ":username": newUsername,
+      });
     }
 
     if (NEW_USERNAME_USER.id === userId) {
@@ -97,7 +99,9 @@ export class UserService {
    * @returns {Promise<IUser>}
    */
   async getUserByUsername(username: string): Promise<IUser> {
-    return this.db.getItemByFilter<IUser>(config.USERS_TABLE, "username = :username", { ":username": username });
+    return this.db.getItemByFilter<IUser>(config.USERS_TABLE, "username = :username", {
+      ":username": username,
+    });
   }
 
   /**

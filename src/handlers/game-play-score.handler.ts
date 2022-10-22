@@ -40,7 +40,9 @@ export class GameplayScoreApiHandler {
   @HandleExceptions()
   async getGameplaysHighScores(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
     const AUTH_DATA: IAuthTokenPayload = verifyAuthToken(event.headers);
-    const USER_GAMEPLAY_HIGHSCORES = await GAMEPLAY_SCORE_SERVICE.getGameplaysHighScores(AUTH_DATA.userId);
+    const USER_GAMEPLAY_HIGHSCORES = await GAMEPLAY_SCORE_SERVICE.getGameplaysHighScores(
+      AUTH_DATA.userId,
+    );
 
     return ResponseHandler.ok(USER_GAMEPLAY_HIGHSCORES);
   }

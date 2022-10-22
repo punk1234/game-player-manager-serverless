@@ -1,6 +1,11 @@
 import AWS from "aws-sdk";
 import { Service } from "typedi";
-import { GetItemOutput, ScanOutput, UpdateExpression, UpdateItemOutput } from "aws-sdk/clients/dynamodb";
+import {
+  GetItemOutput,
+  ScanOutput,
+  UpdateExpression,
+  UpdateItemOutput,
+} from "aws-sdk/clients/dynamodb";
 
 import { IDbAdapter } from "../../interfaces";
 
@@ -73,7 +78,12 @@ export class DynamoDb implements IDbAdapter {
     filterKeyValues: Record<string, any>,
     filterExprNames?: Record<string, any>,
   ): Promise<T> {
-    const items: any[] = await this.getItemsByFilter<T>(tableName, filterExpression, filterKeyValues, filterExprNames);
+    const items: any[] = await this.getItemsByFilter<T>(
+      tableName,
+      filterExpression,
+      filterKeyValues,
+      filterExprNames,
+    );
 
     return items[0] as T;
   }
