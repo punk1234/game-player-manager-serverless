@@ -13,6 +13,12 @@ import { IDbAdapter, IDbQueryExpressions } from "../../interfaces";
 export class DynamoDb implements IDbAdapter {
   client = new AWS.DynamoDB.DocumentClient();
 
+  /**
+   * @method created
+   * @async
+   * @param {string} tableName
+   * @param {*} data
+   */
   async create(tableName: string, data: any): Promise<void> {
     await this.client
       .put({
@@ -22,6 +28,16 @@ export class DynamoDb implements IDbAdapter {
       .promise();
   }
 
+  /**
+   * @method update
+   * @async
+   * @param {string} tableName
+   * @param {Record<string, any>} key
+   * @param {UpdateExpression} updateExpr
+   * @param {Record<string, any>} exprAttrValueMap
+   * @param {Record<string, any>} updateExprNames
+   * @returns {Promise<T>}
+   */
   async update<T>(
     tableName: string,
     key: Record<string, any>,
@@ -43,6 +59,13 @@ export class DynamoDb implements IDbAdapter {
     return output.Attributes as unknown as T;
   }
 
+  /**
+   * @method getItemByKey
+   * @async
+   * @param {string} tableName
+   * @param {*} queryOpts
+   * @returns {Promise<any>}
+   */
   async getItemByKey<T>(tableName: string, queryOpts: any): Promise<any> {
     const output: GetItemOutput = await this.client
       .get({
@@ -54,6 +77,15 @@ export class DynamoDb implements IDbAdapter {
     return output.Item as T | undefined;
   }
 
+  /**
+   * @method getItemsByFilter
+   * @async
+   * @param {string} tableName
+   * @param {string} filterExpression
+   * @param {Record<string, any>} filterKeyValues
+   * @param {Record<string, any>} filterExprNames
+   * @returns {Promise<any[]>}
+   */
   async getItemsByFilter<T>(
     tableName: string,
     filterExpression?: string,
@@ -72,6 +104,15 @@ export class DynamoDb implements IDbAdapter {
     return output.Items || ([] as T[]);
   }
 
+  /**
+   * @method getItemByFilter
+   * @async
+   * @param {string} tableName
+   * @param {string} filterExpression
+   * @param {Record<string, any>} filterKeyValues
+   * @param {Record<string, any>} filterExprNames
+   * @returns {Promise<T>}
+   */
   async getItemByFilter<T>(
     tableName: string,
     filterExpression: string,
@@ -88,6 +129,11 @@ export class DynamoDb implements IDbAdapter {
     return items[0] as T;
   }
 
+  /**
+   * @method generateQuery
+   * @param {Record<string, any>} queryKeyValuePair
+   * @returns {IDbQueryExpressions}
+   */
   generateQuery(queryKeyValuePair: Record<string, any>): IDbQueryExpressions {
     const queryExprs: Array<string> = [];
     const exprValueMap: Record<string, any> = {};
@@ -103,6 +149,11 @@ export class DynamoDb implements IDbAdapter {
     };
   }
 
+  /**
+   * @method generateQueryWithKeyword
+   * @param {Record<string, any>} queryKeyValuePair
+   * @returns {IDbQueryExpressions}
+   */
   generateQueryWithKeyword(queryKeyValuePair: Record<string, any>): IDbQueryExpressions {
     const queryExprs: Array<string> = [];
     const exprValueMap: Record<string, any> = {};

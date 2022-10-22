@@ -1,5 +1,5 @@
 /**
- * @interface IDatabase
+ * @interface IDbAdapter
  */
 export interface IDbAdapter {
   create(tableName: string, data: any): Promise<void>;

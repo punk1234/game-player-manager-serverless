@@ -1,3 +1,8 @@
+/**
+ * @function
+ * @param {*} options
+ * @returns {Function}
+ */
 export default function (options: any) {
   return function <T extends { new (...args: any[]): any }>(target: T): T {
     return class extends target {

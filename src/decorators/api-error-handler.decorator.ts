@@ -1,5 +1,9 @@
 import { handleApiError } from "../helpers";
 
+/**
+ * @function
+ * @returns {Function}
+ */
 export default function () {
   return (_target: any, _keyProperty?: any, descriptor?: TypedPropertyDescriptor<any>) => {
     const originalMethod = descriptor?.value;
