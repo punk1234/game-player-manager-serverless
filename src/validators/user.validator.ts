@@ -17,7 +17,7 @@ export default class UserValidator extends BaseValidator {
     return yup.object().shape({
       username: yup.string().min(3).max(20).required(), // TODO: Can define `min` & `max` as constants
       password: yup.string().min(6).max(25).required(), // TODO: Can define `min` & `max` as constants
-      beAdmin: yup.bool(),
+      beAdmin: yup.mixed().oneOf([true, false]),
       gender: yup.mixed().oneOf(Object.values(Gender)),
       bio: yup.string(),
     });
