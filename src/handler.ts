@@ -8,6 +8,10 @@ import {
   UserApiHandler,
 } from "./handlers";
 
+/**********************************************************************************
+ ******************************* ROUTES HANDLERS **********************************
+ **********************************************************************************/
+
 const AUTH_API_HANDLER = Container.get(AuthApiHandler);
 const USER_API_HANDLER = Container.get(UserApiHandler);
 const GAME_API_HANDLER = Container.get(GameApiHandler);

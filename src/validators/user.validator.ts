@@ -15,8 +15,8 @@ export default class UserValidator extends BaseValidator {
   // eslint-disable-next-line
   checkRegisterUser(data: any): any {
     return yup.object().shape({
-      username: yup.string().required(),
-      password: yup.string().required(),
+      username: yup.string().min(3).max(20).required(), // TODO: Can define `min` & `max` as constants
+      password: yup.string().min(6).max(25).required(), // TODO: Can define `min` & `max` as constants
       beAdmin: yup.bool(),
       gender: yup.mixed().oneOf(Object.values(Gender)),
       bio: yup.string(),
@@ -31,8 +31,8 @@ export default class UserValidator extends BaseValidator {
   // eslint-disable-next-line
   checkLogin(data: any): any {
     return yup.object().shape({
-      username: yup.string().required(),
-      password: yup.string().required(),
+      username: yup.string().min(3).max(20).required(),
+      password: yup.string().min(6).max(25).required(),
     });
   }
 
@@ -57,7 +57,7 @@ export default class UserValidator extends BaseValidator {
   // eslint-disable-next-line
   checkChangeUsername(data: any): any {
     return yup.object().shape({
-      username: yup.string().required(),
+      username: yup.string().min(3).max(20).required(),
     });
   }
 }
