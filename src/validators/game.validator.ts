@@ -14,9 +14,9 @@ export default class GameValidator extends BaseValidator {
   // eslint-disable-next-line
   checkCreateGame(data: any): any {
     return yup.object().shape({
-      name: yup.string().required(),
-      maxGamePlayScore: yup.number().positive().integer().required(),
-      dailyMaxScoreSubmissionCount: yup.number().positive().integer().required(),
+      name: yup.string().min(2).required(),
+      maxGamePlayScore: yup.number().positive().integer().min(1000).required(),
+      dailyMaxScoreSubmissionCount: yup.number().positive().integer().min(3).required(),
       description: yup.string(),
     });
   }
@@ -30,9 +30,9 @@ export default class GameValidator extends BaseValidator {
   checkUpdateGame(data: any): any {
     return yup.object().shape({
       gameId: yup.string().uuid().required(),
-      name: yup.string(),
-      maxGamePlayScore: yup.number().positive().integer(),
-      dailyMaxScoreSubmissionCount: yup.number().positive().integer(),
+      name: yup.string().min(2),
+      maxGamePlayScore: yup.number().positive().integer().min(1000),
+      dailyMaxScoreSubmissionCount: yup.number().positive().integer().min(3),
       description: yup.string(),
     });
   }
