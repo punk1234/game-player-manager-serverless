@@ -5,9 +5,9 @@ import config from "../config";
 import { default as C } from "../constants";
 import { UserService } from "./user.service";
 import { UserValidator } from "../validators";
-import { IAuthTokenPayload } from "../interfaces";
 import { UnauthenticatedError } from "../exceptions";
 import { JwtHelper, PasswordHasher } from "../helpers";
+import { IAuthTokenPayload, IUser } from "../interfaces";
 import { LoginDto, LoginResponse, RegisterUserDto, User } from "../models";
 
 @Service()
@@ -46,11 +46,7 @@ export class AuthService {
   async login(data: LoginDto): Promise<LoginResponse> {
     UserValidator.checkLogin(data);
 
-    const USER = await this.userService.getUserByUsername(data.username);
-
-    if (!USER) {
-      throw new UnauthenticatedError(C.ResponseMessage.ERR_INVALID_CREDENTIALS);
-    }
+    const USER = await this.checkThatLoginCredentialsAreValid(data);
 
     const IS_CORRECT_PASSWORD = PasswordHasher.verify(data.password, USER.password as string);
     if (!IS_CORRECT_PASSWORD) {
@@ -68,5 +64,26 @@ export class AuthService {
       user: USER,
       token: AUTH_TOKEN,
     };
+  }
+
+  /**
+   * @method checkThatLoginCredentialsAreValid
+   * @async
+   * @param {LoginDto} data 
+   * @returns {Promise<IUser>}
+   */
+  private async checkThatLoginCredentialsAreValid(data: LoginDto): Promise<IUser> {
+    const USER = await this.userService.getUserByUsername(data.username);
+
+    if (!USER) {
+      throw new UnauthenticatedError(C.ResponseMessage.ERR_INVALID_CREDENTIALS);
+    }
+
+    const IS_CORRECT_PASSWORD = PasswordHasher.verify(data.password, USER.password as string);
+    if (!IS_CORRECT_PASSWORD) {
+      throw new UnauthenticatedError(C.ResponseMessage.ERR_INVALID_CREDENTIALS);
+    }
+
+    return USER;
   }
 }

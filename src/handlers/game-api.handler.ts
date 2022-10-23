@@ -38,7 +38,7 @@ export class GameApiHandler {
     const AUTH_DATA: IAuthTokenPayload = verifyAuthToken(event.headers);
     RoleAccess.checkThatUserIsAuthorized(AUTH_DATA.isAdmin);
 
-    const GAME_ID: string = event.pathParameters?.gameId as string; // WHAT IF THIS IS `undefined`
+    const GAME_ID: string = event.pathParameters?.gameId as string;
     const REQ_BODY = JSON.parse(event.body as string);
 
     await GameValidator.checkUpdateGame({ ...REQ_BODY, gameId: GAME_ID });
@@ -67,7 +67,7 @@ export class GameApiHandler {
    */
   @HandleExceptions()
   async getGame(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
-    await GameValidator.checkGetGame(event.pathParameters); // WHAT IF THIS IS `undefined`
+    await GameValidator.checkGetGame(event.pathParameters);
 
     const GAME = await GAME_SERVICE.getGame(event.pathParameters?.gameId as string);
 
