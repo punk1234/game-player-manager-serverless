@@ -1,3 +1,35 @@
+# GAME-PLAYER MANAGER (SERVERLESS)
+```
+This project is as a result of learning SERVERLESS with AWS-LAMBDA & DYNAMODB.
+```
+
+## APP FUNCTIONALITIES
+```
+- User Registration or Sign-up
+- Login
+- Create Game
+- Update Game
+- Get Games
+- Get Game
+- Update Profile
+- Change Username
+- Submit Gameplay Daily Score
+- Get Gameplays Score Summary (including OVERALL Highscore)
+
+For more info, checkout API-SPEC
+```
+
+## TOOLS & LIBRARY USED
+- NOdeJS
+- Typescript
+- DynamoDB
+- Yup (for validation)
+
+## TESTING ENDPOINT (BASE URL)
+```
+https://g7ug3oxrjf.execute-api.us-east-1.amazonaws.com/
+```
+
 <!--
 title: 'Serverless Framework Node Express API service backed by DynamoDB on AWS'
 description: 'This template demonstrates how to develop and deploy a simple Node Express API service backed by DynamoDB running on AWS Lambda using the traditional Serverless Framework.'
