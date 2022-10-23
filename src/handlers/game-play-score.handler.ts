@@ -13,6 +13,7 @@ const GAMEPLAY_SCORE_SERVICE = Container.get(GameplayScoreService);
 export class GameplayScoreApiHandler {
   /**
    * @method submitGameplayScore
+   * @async
    * @param {APIGatewayProxyEvent} event
    * @returns {Promise<APIGatewayProxyResult>}
    */
@@ -34,6 +35,7 @@ export class GameplayScoreApiHandler {
 
   /**
    * @method getGameplaysHighScores
+   * @async
    * @param {APIGatewayProxyEvent} event
    * @returns {Promise<APIGatewayProxyResult>}
    */

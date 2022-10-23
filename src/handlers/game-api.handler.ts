@@ -13,6 +13,7 @@ const GAME_SERVICE = Container.get(GameService);
 export class GameApiHandler {
   /**
    * @method createGame
+   * @async
    * @param {APIGatewayProxyEvent} event
    * @returns {Promise<APIGatewayProxyResult>}
    */
@@ -30,6 +31,7 @@ export class GameApiHandler {
 
   /**
    * @method updateGame
+   * @async
    * @param {APIGatewayProxyEvent} event
    * @returns {Promise<APIGatewayProxyResult>}
    */
@@ -49,6 +51,7 @@ export class GameApiHandler {
 
   /**
    * @method getGames
+   * @async
    * @param {APIGatewayProxyEvent} event
    * @returns {Promise<APIGatewayProxyResult>}
    */
@@ -62,6 +65,7 @@ export class GameApiHandler {
 
   /**
    * @method getGame
+   * @async
    * @param {APIGatewayProxyEvent} event
    * @returns {Promise<APIGatewayProxyResult>}
    */

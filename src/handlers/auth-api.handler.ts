@@ -12,6 +12,7 @@ const AUTH_SERVICE = Container.get(AuthService);
 export class AuthApiHandler {
   /**
    * @method registerUser
+   * @async
    * @param {APIGatewayProxyEvent} event
    * @returns {Promise<APIGatewayProxyResult>}
    */
@@ -27,6 +28,7 @@ export class AuthApiHandler {
 
   /**
    * @method login
+   * @async
    * @param {APIGatewayProxyEvent} event
    * @returns {Promise<APIGatewayProxyResult>}
    */
