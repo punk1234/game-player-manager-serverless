@@ -1,9 +1,9 @@
-# GAME-PLAYER MANAGER (SERVERLESS)
+## GAME-PLAYER MANAGER (SERVERLESS)
 ```
 This project is as a result of learning SERVERLESS with AWS-LAMBDA & DYNAMODB.
 ```
 
-## APP FUNCTIONALITIES
+### APP FUNCTIONALITIES
 ```
 - User Registration or Sign-up
 - Login
@@ -19,9 +19,9 @@ This project is as a result of learning SERVERLESS with AWS-LAMBDA & DYNAMODB.
 For more info, checkout API-SPEC
 ```
 
-## TOOLS & LIBRARY USED
+### TOOLS & LIBRARY USED
 - NOdeJS
-- Typescript
+- TypeScript
 - DynamoDB
 - Yup (for validation)
 
