@@ -11,7 +11,7 @@ class UnauthorizedError extends CustomError {
    * @param {string} message
    * @param {object} metaData
    */
-  constructor(message: string = K.ResponseMessage.ERR_UNAUTHENTICATED, metaData: object = {}) {
+  constructor(message: string = K.ResponseMessage.ERR_UNAUTHORIZED, metaData: object = {}) {
     super(K.HttpStatusCode.UNAUTHORIZED, message, metaData);
   }
 }
