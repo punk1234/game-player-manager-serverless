@@ -69,7 +69,7 @@ export class AuthService {
   /**
    * @method checkThatLoginCredentialsAreValid
    * @async
-   * @param {LoginDto} data 
+   * @param {LoginDto} data
    * @returns {Promise<IUser>}
    */
   private async checkThatLoginCredentialsAreValid(data: LoginDto): Promise<IUser> {
