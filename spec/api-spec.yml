@@ -146,7 +146,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Game" # SHOULD BE A GAME LIST
+                $ref: '#/components/schemas/GameListResponse'
         "400":
           $ref: "#/components/responses/InvalidRequest"
         "401":
@@ -334,7 +334,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserGameHighScore" # NEEDS TO BE A LIST
+                $ref: "#/components/schemas/UserGameHighScoresResponse"
         "400":
           $ref: "#/components/responses/InvalidRequest"
         "401":
@@ -404,6 +404,7 @@ components:
         - "name"
         - "maxGamePlayScore"
         - "dailyMaxScoreSubmission"
+        - "dailyMaxScoreSubmissionCount"
       properties:
         name:
           type: "string"
@@ -541,6 +542,16 @@ components:
           format: "date"
           description: "Date & time game record was created"
 
+    GameListResponse:
+      type: "object"
+      required:
+        - records
+      properties:
+        records:
+          type: "array"
+          items:
+            $ref: '#/components/schemas/Game'
+
     UserGameHighScore:
       type: "object"
       additionalProperties: false
@@ -580,6 +591,16 @@ components:
           type: "integer"
           minimum: 0
           description: "Submission count based on lastSubmittedAt field (to keep track of game-play threshold as there is a daily submission max per game)"
+
+    UserGameHighScoresResponse:
+      type: "object"
+      required:
+        - records
+      properties:
+        records:
+          type: "array"
+          items:
+            $ref: '#/components/schemas/UserGameHighScore'
 
 
     StatusDto:
