@@ -13,6 +13,7 @@ const USER_SERVICE = Container.get(UserService);
 export class UserApiHandler {
   /**
    * @method getMyProfile
+   * @async
    * @param {APIGatewayProxyEvent} event
    * @returns {Promise<APIGatewayProxyResult>}
    */
@@ -26,6 +27,7 @@ export class UserApiHandler {
 
   /**
    * @method updateMyProfile
+   * @async
    * @param {APIGatewayProxyEvent} event
    * @returns {Promise<APIGatewayProxyResult>}
    */
@@ -42,6 +44,7 @@ export class UserApiHandler {
 
   /**
    * @method changeUsername
+   * @async
    * @param {APIGatewayProxyEvent} event
    * @returns {Promise<APIGatewayProxyResult>}
    */

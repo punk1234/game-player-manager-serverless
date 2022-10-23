@@ -44,14 +44,7 @@ export class AuthService {
    * @returns {Promise<LoginResponse>}
    */
   async login(data: LoginDto): Promise<LoginResponse> {
-    UserValidator.checkLogin(data);
-
     const USER = await this.checkThatLoginCredentialsAreValid(data);
-
-    const IS_CORRECT_PASSWORD = PasswordHasher.verify(data.password, USER.password as string);
-    if (!IS_CORRECT_PASSWORD) {
-      throw new UnauthenticatedError(C.ResponseMessage.ERR_INVALID_CREDENTIALS);
-    }
 
     const AUTH_TOKEN: string = JwtHelper.generateToken(
       { userId: USER.id, isAdmin: USER.isAdmin } as IAuthTokenPayload,
