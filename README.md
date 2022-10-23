@@ -4,7 +4,6 @@ This project is as a result of learning SERVERLESS with AWS-LAMBDA & DYNAMODB.
 ```
 
 ### APP FUNCTIONALITIES
-```
 - User Registration or Sign-up
 - Login
 - Create Game
@@ -16,6 +15,7 @@ This project is as a result of learning SERVERLESS with AWS-LAMBDA & DYNAMODB.
 - Submit Gameplay Daily Score
 - Get Gameplays Score Summary (including OVERALL Highscore)
 
+```
 For more info, checkout API-SPEC
 ```
 
